@@ -1,0 +1,47 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "readiness",
+  "timezone": "America/New_York",
+  "experiment_start": null,
+  "day_30_end": null,
+  "day_45_closeout": null,
+  "current_day": 0,
+  "phase": "pre_experiment_readiness",
+  "model": {
+    "name": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "service_tier": "default",
+    "subagents_enabled": false
+  },
+  "treasury": {
+    "starting_cash": 115.0,
+    "current_cash": 115.0,
+    "confirmed_earned_revenue": 0.0,
+    "unearned_revenue_liability": 0.0,
+    "direct_expenses": 0.0,
+    "fees": 0.0,
+    "refunds_chargebacks": 0.0,
+    "confirmed_realized_profit": 0.0
+  },
+  "active_hypothesis": null,
+  "active_initiatives": [],
+  "pending_approvals": [],
+  "pending_external_actions": [],
+  "customer_obligations": [],
+  "unresolved_incidents": [],
+  "next_permitted_action": "Complete readiness checklist; do not begin opportunity research.",
+  "readiness": {
+    "dedicated_email_ready": false,
+    "payment_method_ready": false,
+    "preview_hosting_ready": false,
+    "treasury_separated": false,
+    "keep_awake_configured": false,
+    "dashboard_publish_path_ready": false,
+    "acceptance_tests_passed": true,
+    "preregistration_published": false,
+    "operator_schedule_tested": false,
+    "close_schedule_tested": false
+  },
+  "last_validated_at": "2026-08-08T13:51:58-04:00",
+  "last_snapshot": null
+}
