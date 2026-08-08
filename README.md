@@ -55,6 +55,7 @@ On BRONTOSAURUS, use:
 ```powershell
 python scripts/genesis.py validate
 python scripts/genesis.py acquire-lock --task operator
+python scripts/genesis.py start-cycle --task operator
 python scripts/genesis.py release-lock --run-id <run-id>
 python scripts/genesis.py check-action --action-id <action-id>
 python scripts/genesis.py begin-action --action-id <action-id> --run-id <run-id>

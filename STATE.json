@@ -36,7 +36,7 @@
     "payment_method_ready": false,
     "preview_hosting_ready": true,
     "treasury_separated": false,
-    "keep_awake_configured": false,
+    "keep_awake_configured": true,
     "dashboard_publish_path_ready": true,
     "acceptance_tests_passed": true,
     "cold_resume_audit_passed": true,

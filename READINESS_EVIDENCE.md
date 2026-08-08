@@ -1,0 +1,49 @@
+# Readiness Evidence Record
+
+Record only non-sensitive evidence. Do not include an email address, account number, payment token, credential, recovery code, legal identifier, or customer information in this public repository.
+
+## Trusted Codex project task
+
+- Task ID: `PENDING`
+- Repository working directory verified: `PENDING`
+- Project config loaded and fixed parameters verified: `PENDING`
+- Recorded at: `PENDING`
+
+## Dedicated email
+
+- Opaque account label: `PENDING`
+- Authentication tested by Max: `PENDING`
+- Recovery method held privately by Max: `PENDING`
+- Recorded at: `PENDING`
+
+## Payment readiness
+
+- Provider: `PENDING`
+- Legally usable account confirmed by Max: `PENDING`
+- Payment collection capability verified: `PENDING`
+- Refund and payout controls verified: `PENDING`
+- Credentials and financial identifiers kept outside repository: `PENDING`
+- Recorded at: `PENDING`
+
+## Treasury separation
+
+- Opaque envelope/account label: `PENDING`
+- Opening amount: `$115.00`
+- No debt or credit facility attached: `PENDING`
+- Confirmed by Max at: `PENDING`
+
+## Operator dry run
+
+- Task ID: `PENDING`
+- Timestamp: `PENDING`
+- Readiness branch correctly blocked market research: `PENDING`
+- Lock acquisition/overlap/release behavior: `PENDING`
+- Repository changes: `PENDING`
+
+## Close dry run
+
+- Task ID: `PENDING`
+- Timestamp: `PENDING`
+- No outreach or spending initiated: `PENDING`
+- Reconciliation/dashboard/snapshot behavior: `PENDING`
+- Repository changes: `PENDING`

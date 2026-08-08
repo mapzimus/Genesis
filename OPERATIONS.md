@@ -3,9 +3,9 @@
 ## Start a cycle
 
 1. Read the frozen records and `STATE.json`.
-2. Run the validator.
-3. Acquire the matching run lock and retain the returned `run_id`.
-4. If a lock is already active, exit without external action.
+2. Run `scripts/genesis.py start-cycle --task operator` or `--task close` and retain the returned `run_id`.
+3. This command validates the repository, activation state, readiness flags, dates, and lock before acquisition.
+4. If it blocks or a lock is already active, exit without research or external action.
 
 ## Research stage
 

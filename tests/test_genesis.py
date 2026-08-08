@@ -254,6 +254,25 @@ class GenesisAcceptanceTests(unittest.TestCase):
         self.assertFalse(result.ok)
         self.assertTrue(any("readiness items remain false" in error for error in result.errors))
 
+    def test_start_cycle_is_blocked_in_readiness_before_lock_acquisition(self) -> None:
+        with self.assertRaises(genesis.GenesisError):
+            genesis.start_cycle("operator", 120)
+        lock = genesis.load_json(self.root / "RUN_LOCK.json")
+        self.assertEqual(lock["status"], "idle")
+
+    def test_start_cycle_acquires_lock_only_after_full_activation(self) -> None:
+        state = genesis.load_json(self.root / "STATE.json")
+        state["status"] = "active"
+        state["current_day"] = 1
+        state["experiment_start"] = "2026-08-09T00:00:00-04:00"
+        state["readiness"] = {key: True for key in state["readiness"]}
+        genesis.save_json(self.root / "STATE.json", state)
+        run_id = genesis.start_cycle("operator", 120)
+        lock = genesis.load_json(self.root / "RUN_LOCK.json")
+        self.assertEqual(lock["status"], "active")
+        self.assertEqual(lock["run_id"], run_id)
+        genesis.release_lock(run_id, "acceptance test")
+
 
 if __name__ == "__main__":
     unittest.main()

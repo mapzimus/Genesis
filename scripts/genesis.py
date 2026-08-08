@@ -513,6 +513,8 @@ def validate_workspace() -> ValidationResult:
         "prompts/EVALUATOR.md",
         "AUTOMATIONS.md",
         "OPERATIONS.md",
+        "MACHINE_READINESS.md",
+        "READINESS_EVIDENCE.md",
     ]
     for relative in required_paths:
         if not (ROOT / relative).exists():
@@ -652,6 +654,20 @@ def acquire_lock(task_type: str, expected_max_minutes: int, recover_stale: bool)
         return run_id
     finally:
         release_guard(fd)
+
+
+def start_cycle(task_type: str, expected_max_minutes: int) -> str:
+    result = validate_workspace()
+    if not result.ok:
+        raise GenesisError("Cycle blocked because workspace validation failed")
+    state = load_json(ROOT / "STATE.json")
+    false_items = [key for key, value in state.get("readiness", {}).items() if value is not True]
+    if state.get("status") != "active" or false_items:
+        detail = ", ".join(false_items) if false_items else f"status={state.get('status')}"
+        raise GenesisError(f"Day 1 readiness gate blocked this cycle: {detail}")
+    if state.get("current_day", 0) < 1 or not state.get("experiment_start"):
+        raise GenesisError("Cycle blocked because the activated experiment dates are incomplete")
+    return acquire_lock(task_type, expected_max_minutes, False)
 
 
 def heartbeat(run_id: str) -> None:
@@ -945,6 +961,12 @@ def build_parser() -> argparse.ArgumentParser:
     acquire.add_argument("--expected-max-minutes", type=int, default=120)
     acquire.add_argument("--recover-stale", action="store_true")
 
+    start = commands.add_parser(
+        "start-cycle", help="Validate activation and acquire a cycle lock atomically"
+    )
+    start.add_argument("--task", required=True, choices=["operator", "close", "audit"])
+    start.add_argument("--expected-max-minutes", type=int, default=120)
+
     pulse = commands.add_parser("heartbeat", help="Refresh an owned run lock")
     pulse.add_argument("--run-id", required=True)
 
@@ -987,6 +1009,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0 if result.ok else 1
         if args.command == "acquire-lock":
             print(acquire_lock(args.task, args.expected_max_minutes, args.recover_stale))
+            return 0
+        if args.command == "start-cycle":
+            print(start_cycle(args.task, args.expected_max_minutes))
             return 0
         if args.command == "heartbeat":
             heartbeat(args.run_id)
