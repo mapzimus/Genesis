@@ -1,0 +1,1 @@
+approval_id,requested_at_et,decided_at_et,expires_at_et,action_type,description,amount_usd,channel,audience_rule,quantity_limit,scope_hash,evidence_ref,cheapest_viable_alternative,predeclared_loss_limit,cooling_off_completed,decision,decided_by,completed_action_id,notes

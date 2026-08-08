@@ -1,2 +1,2 @@
-approval_id,requested_at_et,decided_at_et,expires_at_et,action_type,description,amount_usd,channel,audience_rule,quantity_limit,scope_hash,decision,decided_by,completed_action_id,notes
-
+approval_id,requested_at_et,decided_at_et,expires_at_et,action_type,description,amount_usd,channel,audience_rule,quantity_limit,scope_hash,evidence_ref,cheapest_viable_alternative,predeclared_loss_limit,cooling_off_completed,decision,decided_by,completed_action_id,notes
+apr-readiness-github-publish-001,2026-08-08T14:02:50-04:00,2026-08-08T14:02:50-04:00,2026-08-09T14:02:50-04:00,repository_publish,Publish the frozen readiness repository and enable its dashboard on GitHub Pages,0.00,codex_task,public,1,36b321e22858e3d01c5bae42b67106ef04f805215cec55c851cd5beadcca8027,decision-0001,Use the existing free public GitHub repository without buying a domain.,,true,approved,Max Howe,,Max supplied the repository URL and requested plan implementation.

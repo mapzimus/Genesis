@@ -2,6 +2,10 @@
 
 Project Genesis is a controlled, live entrepreneurship experiment operated by Max Howe and directed by one consistently configured Codex agent.
 
+Public protocol: https://github.com/mapzimus/Genesis/blob/main/PREREGISTRATION.md
+
+Passive dashboard: https://mapzimus.github.io/Genesis/
+
 The workspace is in **readiness mode**. Day 1 has not started. Do not begin opportunity research until every readiness item in `STATE.json` is true, the acceptance suite passes, and the preregistration is published and timestamped.
 
 ## Fixed design
@@ -53,11 +57,14 @@ python scripts/genesis.py validate
 python scripts/genesis.py acquire-lock --task operator
 python scripts/genesis.py release-lock --run-id <run-id>
 python scripts/genesis.py check-action --action-id <action-id>
+python scripts/genesis.py begin-action --action-id <action-id> --run-id <run-id>
 python scripts/genesis.py snapshot
 python scripts/genesis.py dashboard
 ```
 
 External-action commands also require the current `run_id` and a pre-existing sanitized decision record. This makes the separation between research and execution machine-checkable.
+
+Follow `OPERATIONS.md` for the planned → executing → completed sequence. An executing action blocks automatic retries after a crash.
 
 Record secondary, non-treasury costs in `economic-costs.csv`. Human time comes from `interventions.csv`; the public summary computes the fully loaded result without double-counting costs already in `treasury.csv`.
 

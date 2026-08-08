@@ -209,6 +209,7 @@ def validate_ledger(errors: list[str]) -> dict[str, Any]:
     refunds = Decimal("0.00")
     market_earned = Decimal("0.00")
     publicity_earned = Decimal("0.00")
+    spend_by_approval: dict[str, Decimal] = {}
 
     for index, row in enumerate(rows, start=2):
         entry_id = row.get("entry_id", "").strip()
@@ -277,6 +278,22 @@ def validate_ledger(errors: list[str]) -> dict[str, Any]:
             approval = approvals.get(approval_id)
             if not approval or approval.get("decision", "").strip().lower() != "approved":
                 errors.append(f"treasury.csv:{index} expense lacks a matching approved approval_id")
+            else:
+                spend_by_approval[approval_id] = spend_by_approval.get(
+                    approval_id, Decimal("0.00")
+                ) + expense
+                if not approval.get("cheapest_viable_alternative", "").strip():
+                    errors.append(f"Approval {approval_id} omits the cheapest viable alternative")
+                if expense > Decimal("10.00") and not approval.get("evidence_ref", "").strip():
+                    errors.append(f"Approval {approval_id} omits evidence for spend above $10")
+                if approval.get("action_type", "").strip() == "paid_advertising" and not approval.get(
+                    "predeclared_loss_limit", ""
+                ).strip():
+                    errors.append(f"Approval {approval_id} omits the paid-advertising loss limit")
+                if expense > Decimal("20.00") and approval.get(
+                    "cooling_off_completed", ""
+                ).strip().lower() not in TRUE_VALUES:
+                    errors.append(f"Approval {approval_id} omits the required cooling-off confirmation")
         if earned_change > 0 and not all(
             [settled, fees_known, delivered, transaction_valid, independent]
         ):
@@ -302,6 +319,16 @@ def validate_ledger(errors: list[str]) -> dict[str, Any]:
             market_earned += earned_change
         if qualifying and source == "genesis_dashboard":
             publicity_earned += earned_change
+
+    for approval_id, spent in spend_by_approval.items():
+        try:
+            approved_amount = money(
+                approvals[approval_id].get("amount_usd"), field=f"approval {approval_id} amount_usd"
+            )
+            if spent > approved_amount:
+                errors.append(f"Approval {approval_id} was exceeded: spent {spent}, approved {approved_amount}")
+        except GenesisError as exc:
+            errors.append(str(exc))
 
     profit = (earned - expenses - fees - refunds).quantize(CENT)
     market_profit = (market_earned - expenses - fees - refunds).quantize(CENT)
@@ -337,7 +364,7 @@ def validate_secondary_costs(errors: list[str]) -> dict[str, Any]:
             errors.append(f"interventions.csv:{index} has negative duration")
             continue
         total_minutes += minutes
-        day = timestamp.astimezone().date().isoformat()
+        day = timestamp.date().isoformat()
         minutes_by_day[day] = minutes_by_day.get(day, Decimal("0")) + minutes
     for day, minutes in minutes_by_day.items():
         if minutes > 30:
@@ -408,6 +435,7 @@ def validate_actions(errors: list[str]) -> dict[str, Any]:
     events = read_jsonl(ROOT / "external-actions.jsonl")
     completed: set[str] = set()
     planned: set[str] = set()
+    executing: set[str] = set()
     for index, event in enumerate(events, start=1):
         action_id = str(event.get("action_id", "")).strip()
         status = str(event.get("status", "")).strip()
@@ -429,15 +457,27 @@ def validate_actions(errors: list[str]) -> dict[str, Any]:
                 errors.append(f"Action {action_id} lacks a sanitized decision record")
             elif decision.get("external_execution_permitted") is not True:
                 errors.append(f"Action {action_id} decision does not permit external execution")
+        elif status == "executing":
+            if action_id not in planned:
+                errors.append(f"Action {action_id} began executing without an earlier planned event")
+            if action_id in executing:
+                errors.append(f"Action {action_id} has more than one executing event")
+            executing.add(action_id)
         elif status == "completed":
             if action_id in completed:
                 errors.append(f"Action {action_id} has more than one completed event")
             if action_id not in planned:
                 errors.append(f"Action {action_id} completed without an earlier planned event")
+            if action_id not in executing:
+                errors.append(f"Action {action_id} completed without an earlier executing event")
             completed.add(action_id)
         elif status not in {"failed", "cancelled"}:
             errors.append(f"Action {action_id} has unsupported status {status!r}")
-    return {"planned_actions": len(planned), "completed_actions": len(completed)}
+    return {
+        "planned_actions": len(planned),
+        "executing_actions": len(executing - completed),
+        "completed_actions": len(completed),
+    }
 
 
 def scan_dashboard(errors: list[str]) -> None:
@@ -471,6 +511,8 @@ def validate_workspace() -> ValidationResult:
         "economic-costs.csv",
         "INCIDENTS.md",
         "prompts/EVALUATOR.md",
+        "AUTOMATIONS.md",
+        "OPERATIONS.md",
     ]
     for relative in required_paths:
         if not (ROOT / relative).exists():
@@ -573,6 +615,8 @@ def release_guard(fd: int) -> None:
 
 
 def acquire_lock(task_type: str, expected_max_minutes: int, recover_stale: bool) -> str:
+    if expected_max_minutes < 1 or expected_max_minutes > 120:
+        raise GenesisError("expected maximum duration must be between 1 and 120 minutes")
     fd = acquire_guard()
     try:
         path = ROOT / "RUN_LOCK.json"
@@ -651,8 +695,12 @@ def action_events(action_id: str) -> list[dict[str, Any]]:
     ]
 
 
-def check_action(action_id: str) -> bool:
-    return any(event.get("status") == "completed" for event in action_events(action_id))
+def action_status(action_id: str) -> str:
+    statuses = [str(event.get("status")) for event in action_events(action_id)]
+    for status in ["completed", "executing", "planned", "failed", "cancelled"]:
+        if status in statuses:
+            return status
+    return "not found"
 
 
 def require_active_lock(run_id: str) -> None:
@@ -682,6 +730,9 @@ def approved_record(approval_id: str) -> dict[str, str]:
     record = records[0]
     if record.get("decision", "").strip().lower() != "approved":
         raise GenesisError(f"Approval {approval_id!r} is not approved")
+    scope_hash = record.get("scope_hash", "").strip().lower()
+    if not re.fullmatch(r"[0-9a-f]{64}", scope_hash):
+        raise GenesisError(f"Approval {approval_id!r} requires a 64-character SHA-256 scope_hash")
     expires = parse_datetime(record.get("expires_at_et"), field=f"approval {approval_id} expires_at_et")
     if expires < now_utc():
         raise GenesisError(f"Approval {approval_id!r} has expired")
@@ -702,7 +753,7 @@ def plan_action(
         raise GenesisError(f"Action {action_id!r} already exists")
     approval = approved_record(approval_id)
     sanitized_decision(decision_id)
-    if approval.get("scope_hash") and approval.get("scope_hash") != scope_hash:
+    if approval.get("scope_hash", "").strip().lower() != scope_hash.strip().lower():
         raise GenesisError("Action scope hash does not match the approval")
     append_jsonl(
         ROOT / "external-actions.jsonl",
@@ -721,11 +772,39 @@ def plan_action(
     )
 
 
-def complete_action(action_id: str, run_id: str, result: str) -> None:
+def begin_action(action_id: str, run_id: str) -> None:
     require_active_lock(run_id)
     events = action_events(action_id)
     if not any(event.get("status") == "planned" for event in events):
         raise GenesisError("Action has no planned event")
+    if any(event.get("status") == "completed" for event in events):
+        raise GenesisError("Action is already completed; duplicate execution blocked")
+    if any(event.get("status") == "executing" for event in events):
+        raise GenesisError("Action is already executing; reconcile it before any retry")
+    planned = next(event for event in events if event.get("status") == "planned")
+    approved_record(str(planned.get("approval_id")))
+    sanitized_decision(str(planned.get("decision_id")))
+    append_jsonl(
+        ROOT / "external-actions.jsonl",
+        {
+            "event_id": f"evt-{uuid.uuid4()}",
+            "action_id": action_id,
+            "timestamp_et": iso_now(),
+            "action_type": planned.get("action_type"),
+            "status": "executing",
+            "approval_id": planned.get("approval_id"),
+            "decision_id": planned.get("decision_id"),
+            "run_id": run_id,
+            "scope_hash": planned.get("scope_hash"),
+        },
+    )
+
+
+def complete_action(action_id: str, run_id: str, result: str) -> None:
+    require_active_lock(run_id)
+    events = action_events(action_id)
+    if not any(event.get("status") == "executing" for event in events):
+        raise GenesisError("Action has not entered executing state")
     if any(event.get("status") == "completed" for event in events):
         raise GenesisError("Action is already completed; duplicate execution blocked")
     planned = next(event for event in events if event.get("status") == "planned")
@@ -809,6 +888,10 @@ def create_snapshot(result: ValidationResult | None = None) -> Path:
     stamp = now_utc().strftime("%Y%m%dT%H%M%SZ")
     destination = ROOT / "snapshots" / stamp
     destination.mkdir(parents=False, exist_ok=False)
+    state = load_json(ROOT / "STATE.json")
+    state["last_snapshot"] = destination.relative_to(ROOT).as_posix()
+    state["last_validated_at"] = iso_now()
+    save_json(ROOT / "STATE.json", state)
     for relative in [
         "STATE.json",
         "RUN_LOCK.json",
@@ -881,6 +964,10 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--description", required=True)
     plan.add_argument("--scope-hash", required=True)
 
+    begin = commands.add_parser("begin-action", help="Mark a planned action executing before its write")
+    begin.add_argument("--action-id", required=True)
+    begin.add_argument("--run-id", required=True)
+
     complete = commands.add_parser("complete-action", help="Mark one planned external action completed")
     complete.add_argument("--action-id", required=True)
     complete.add_argument("--run-id", required=True)
@@ -910,9 +997,9 @@ def main(argv: list[str] | None = None) -> int:
             print("lock released")
             return 0
         if args.command == "check-action":
-            completed = check_action(args.action_id)
-            print("completed" if completed else "not completed")
-            return 3 if completed else 0
+            status = action_status(args.action_id)
+            print(status)
+            return 3 if status in {"completed", "executing"} else 0
         if args.command == "plan-action":
             plan_action(
                 args.action_id,
@@ -924,6 +1011,10 @@ def main(argv: list[str] | None = None) -> int:
                 args.scope_hash,
             )
             print("action planned")
+            return 0
+        if args.command == "begin-action":
+            begin_action(args.action_id, args.run_id)
+            print("action marked executing; use action_id as the provider idempotency key")
             return 0
         if args.command == "complete-action":
             complete_action(args.action_id, args.run_id, args.result)

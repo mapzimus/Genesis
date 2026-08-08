@@ -1,0 +1,11 @@
+{
+  "status": "idle",
+  "run_id": null,
+  "task_type": null,
+  "started_at": null,
+  "expected_max_minutes": 120,
+  "last_heartbeat": null,
+  "released_at": null,
+  "release_reason": null
+}
+

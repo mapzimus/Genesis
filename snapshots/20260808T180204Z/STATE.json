@@ -40,7 +40,7 @@
     "dashboard_publish_path_ready": false,
     "acceptance_tests_passed": true,
     "cold_resume_audit_passed": true,
-    "preregistration_published": true,
+    "preregistration_published": false,
     "operator_schedule_tested": false,
     "close_schedule_tested": false
   },

@@ -2,6 +2,7 @@
 
 Day 1 is blocked until every box below is complete. Completing the workspace and tests does not start the experiment.
 
+- [ ] Open `C:\Users\mhowe\Documents\Project-Genesis` as a trusted Codex project task so its project-scoped configuration is actually loaded.
 - [ ] Dedicated Genesis email exists and authentication works.
 - [ ] A legally usable payment method is verified and can be revoked or disabled.
 - [ ] Free preview/static hosting works.
@@ -11,7 +12,8 @@ Day 1 is blocked until every box below is complete. Completing the workspace and
 - [ ] Preregistration and frozen evaluator are published and timestamped.
 - [ ] Operator cycle has completed a no-write manual dry run.
 - [ ] Close cycle has completed a no-write manual dry run.
-- [ ] The automated acceptance suite passes.
+- [x] The automated acceptance suite passes (14/14 on 2026-08-08).
+- [x] A separate read-only task reconstructs the readiness state from repository files only (PASS on 2026-08-08).
 
 When all boxes are complete, record the evidence without credentials, calculate the three dates from the selected Day 1, update `STATE.json`, and only then activate the frozen goal and paused schedules.
 

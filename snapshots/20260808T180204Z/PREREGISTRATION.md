@@ -1,14 +1,14 @@
 # Project Genesis Preregistration
 
-Status: **FROZEN AND PUBLISHED — NOT ACTIVATED**
+Status: **FROZEN TEMPLATE — NOT ACTIVATED**
 
 Protocol version: `1.0.0`
 
 Preregistration created: `2026-08-08 America/New_York`
 
-Public preregistration URL: `https://github.com/mapzimus/Genesis/blob/main/PREREGISTRATION.md`
+Public preregistration URL: `PENDING`
 
-Public preregistration timestamp: `2026-08-08T14:02:50-04:00 America/New_York`
+Public preregistration timestamp: `PENDING`
 
 Operating start: `PENDING`
 
@@ -133,3 +133,4 @@ At Day 30, publish preliminary operating results. During Days 31–44, initiate 
 ## Amendment policy
 
 No strategic or metric rule changes after activation. A change required for safety must be recorded in `INCIDENTS.md`, `decisions.jsonl`, and `TOOL_MANIFEST.md` when applicable. It is a protocol event, not a silent correction.
+

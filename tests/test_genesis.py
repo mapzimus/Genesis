@@ -98,7 +98,7 @@ class GenesisAcceptanceTests(unittest.TestCase):
                 "expires_at_et": "2099-01-01T00:00:00-05:00",
                 "action_type": "publish",
                 "description": "Publish fixture",
-                "scope_hash": "scope-1",
+                "scope_hash": "a" * 64,
                 "decision": "approved",
                 "decided_by": "Max Howe",
             }
@@ -198,21 +198,44 @@ class GenesisAcceptanceTests(unittest.TestCase):
         self.add_approval_and_decision(permitted=False)
         run_id = genesis.acquire_lock("manual", 120, False)
         with self.assertRaises(genesis.GenesisError):
-            genesis.plan_action("act-1", "publish", "apr-1", "dec-1", run_id, "fixture", "scope-1")
+            genesis.plan_action("act-1", "publish", "apr-1", "dec-1", run_id, "fixture", "a" * 64)
         genesis.release_lock(run_id, "acceptance test")
 
     def test_duplicate_external_action_completion_is_blocked(self) -> None:
         self.add_approval_and_decision(permitted=True)
         run_id = genesis.acquire_lock("manual", 120, False)
-        genesis.plan_action("act-1", "publish", "apr-1", "dec-1", run_id, "fixture", "scope-1")
+        genesis.plan_action("act-1", "publish", "apr-1", "dec-1", run_id, "fixture", "a" * 64)
+        genesis.begin_action("act-1", run_id)
         genesis.complete_action("act-1", run_id, "published")
         with self.assertRaises(genesis.GenesisError):
             genesis.complete_action("act-1", run_id, "published twice")
         genesis.release_lock(run_id, "acceptance test")
 
+    def test_executing_action_blocks_automatic_retry_after_crash(self) -> None:
+        self.add_approval_and_decision(permitted=True)
+        run_id = genesis.acquire_lock("manual", 120, False)
+        genesis.plan_action("act-1", "publish", "apr-1", "dec-1", run_id, "fixture", "a" * 64)
+        genesis.begin_action("act-1", run_id)
+        self.assertEqual(genesis.action_status("act-1"), "executing")
+        with self.assertRaises(genesis.GenesisError):
+            genesis.begin_action("act-1", run_id)
+        genesis.release_lock(run_id, "acceptance test")
+
+    def test_unapproved_expense_is_blocked(self) -> None:
+        self.append_treasury(
+            event_type="expense",
+            cash_change="-5.00",
+            unearned_revenue_change="0.00",
+            expense_amount="5.00",
+            balance="110.00",
+        )
+        result = genesis.validate_workspace()
+        self.assertFalse(result.ok)
+        self.assertTrue(any("expense lacks a matching approved" in error for error in result.errors))
+
     def test_public_dashboard_rejects_customer_email_or_secret(self) -> None:
         path = self.root / "dashboard" / "leak.txt"
-        path.write_text("customer@example.com sk-abcdefghijklmnopqrstuvwxyz", encoding="utf-8")
+        path.write_text("customer@example.com", encoding="utf-8")
         result = genesis.validate_workspace()
         self.assertFalse(result.ok)
         self.assertTrue(any("Public dashboard contains possible" in error for error in result.errors))
