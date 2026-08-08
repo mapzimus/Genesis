@@ -1,0 +1,51 @@
+{
+  "validated_at": "2026-08-08T18:06:58+00:00",
+  "errors": [],
+  "warnings": [
+    "Experiment remains in readiness mode; Day 1 has not started"
+  ],
+  "summary": {
+    "ledger": {
+      "cash": 115.0,
+      "earned_revenue": 0.0,
+      "unearned_revenue": 0.0,
+      "expenses": 0.0,
+      "fees": 0.0,
+      "refunds_chargebacks": 0.0,
+      "confirmed_realized_profit": 0.0,
+      "market_only_profit_conservative": 0.0,
+      "publicity_earned_revenue": 0.0,
+      "entry_count": 1
+    },
+    "secondary_costs": {
+      "human_minutes": 0.0,
+      "human_cost_at_25_per_hour": 0.0,
+      "incremental_ai_connector_cost_not_in_treasury": 0.0,
+      "imputed_free_service_cost": 0.0
+    },
+    "decisions": {
+      "decision_count": 2
+    },
+    "actions": {
+      "planned_actions": 1,
+      "executing_actions": 0,
+      "completed_actions": 1
+    },
+    "status": "readiness"
+  },
+  "hashes": {
+    "approvals.csv": "65b5d3ec6063fe9cedb7850fc287f7c3f2323330c0477d262878de6fa9086880",
+    "decisions.jsonl": "475febc71db90f6b138bd70fbdc05c5e10c0e12cc0dcda4489c407b5e9fc573a",
+    "economic-costs.csv": "092b039e45773e8eea32646394d9b2aaef2c8ab1508d280eba84bdc606167c26",
+    "external-actions.jsonl": "1603a79bd069ad71fd13c685bb50bfa09292340178d94fccd04cb6dfb9ba0663",
+    "GENESIS_CHARTER.md": "150f8d670784b692331d7ec8dff5de7c424ad15698881e66f4a102eee1c750fa",
+    "INCIDENTS.md": "fe0df002e460cad31a7e0dfb7b46d557a9846a597ae12cedb4bdde773523a65d",
+    "interventions.csv": "41de1c0976e974f12dfb16b359de06662e5bb43fe306057e7da6c5db17e60c01",
+    "metrics.csv": "be1f937df5eb684862c0e41eca973c9f64571f85e11735eb4e268122c2d2354c",
+    "PREREGISTRATION.md": "c39fb6c11feebeafb0d261f66be9a93daf6228a926fd48cbd4e4bcccf7c09ee5",
+    "RUN_LOCK.json": "e1434d1f300cc8d9cca6772b59eb7881dd29ba98649d6ba46c0ccdb187310aa1",
+    "STATE.json": "59916474aacbbbcbce96a229e540efeaf922bd8afc2ae5f5595036bc09f7a096",
+    "TOOL_MANIFEST.md": "5c8d3436c638ba6a7c88fe758fb96f134efe9fccdba7eff3561d2cf3a2432a1c",
+    "treasury.csv": "e043a3be19e6723b90627a2e858e1ab0bfbf122356ac0076c79c1e3053a4e9e1"
+  }
+}
