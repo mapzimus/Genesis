@@ -8,7 +8,7 @@ Preregistration created: `2026-08-08 America/New_York`
 
 Public preregistration URL: `https://github.com/mapzimus/Genesis/blob/main/PREREGISTRATION.md`
 
-Public preregistration timestamp: `2026-08-08T14:02:50-04:00 America/New_York`
+Public preregistration timestamp: `2026-08-08T14:04:35-04:00 America/New_York` (first public Git commit)
 
 Operating start: `PENDING`
 

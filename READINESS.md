@@ -5,11 +5,11 @@ Day 1 is blocked until every box below is complete. Completing the workspace and
 - [ ] Open `C:\Users\mhowe\Documents\Project-Genesis` as a trusted Codex project task so its project-scoped configuration is actually loaded.
 - [ ] Dedicated Genesis email exists and authentication works.
 - [ ] A legally usable payment method is verified and can be revoked or disabled.
-- [ ] Free preview/static hosting works.
+- [x] Free preview/static hosting works through GitHub Pages.
 - [ ] Exactly $115 is separated in the accounting envelope.
 - [ ] BRONTOSAURUS remains awake during both scheduled windows.
-- [ ] A safe public path exists for the transparency dashboard.
-- [ ] Preregistration and frozen evaluator are published and timestamped.
+- [x] A safe public path exists at `https://mapzimus.github.io/Genesis/`.
+- [x] Preregistration and frozen evaluator are published and timestamped in the public repository.
 - [ ] Operator cycle has completed a no-write manual dry run.
 - [ ] Close cycle has completed a no-write manual dry run.
 - [x] The automated acceptance suite passes (14/14 on 2026-08-08).
