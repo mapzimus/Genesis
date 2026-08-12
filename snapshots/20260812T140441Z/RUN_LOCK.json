@@ -1,0 +1,10 @@
+{
+  "status": "active",
+  "run_id": "run-820453f7-0b19-43e4-a4d5-e990cd06a880",
+  "task_type": "manual",
+  "started_at": "2026-08-12T13:56:07+00:00",
+  "expected_max_minutes": 60,
+  "last_heartbeat": "2026-08-12T13:56:07+00:00",
+  "released_at": null,
+  "release_reason": null
+}
