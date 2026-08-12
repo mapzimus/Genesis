@@ -37,7 +37,8 @@ NONQUALIFYING_SOURCES = {"max_existing_network", "friend_or_family", "test"}
 NONQUALIFYING_COUNTERPARTIES = {"owner", "friend", "family", "test", "donor"}
 TRUE_VALUES = {"true", "1", "yes"}
 SECRET_PATTERNS = {
-    "OpenAI-style key": re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"),
+    "API secret key": re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"),
+    "GitHub token": re.compile(r"\bghp_[A-Za-z0-9]{36}\b|\bgithub_pat_[A-Za-z0-9_]{22,}\b"),
     "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     "bearer token": re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{20,}", re.I),
@@ -141,31 +142,25 @@ def sha256_file(path: Path) -> str:
 
 
 def validate_config(errors: list[str]) -> None:
-    path = ROOT / ".codex" / "config.toml"
+    path = ROOT / ".claude" / "settings.json"
     try:
-        text = path.read_text(encoding="utf-8")
-    except FileNotFoundError:
-        errors.append("Missing .codex/config.toml")
+        settings = load_json(path)
+    except GenesisError as exc:
+        errors.append(str(exc))
         return
-    required_fragments = [
-        'model = "gpt-5.6-sol"',
-        'model_reasoning_effort = "high"',
-        'service_tier = "default"',
-        'approval_policy = "on-request"',
-        'sandbox_mode = "workspace-write"',
-        "allow_login_shell = false",
-        "[agents]\nenabled = false",
-        "[sandbox_workspace_write]\nnetwork_access = false",
-        "[mcp_servers.qgis]\nenabled = false",
-        "[mcp_servers.node_repl]\nenabled = false",
-        "[mcp_servers.firecrawl]\nenabled = false",
-        '[apps._default]\ndefault_tools_approval_mode = "writes"',
-        "destructive_enabled = false",
-        "open_world_enabled = false",
-    ]
-    for fragment in required_fragments:
-        if fragment not in text:
-            errors.append(f"Codex config is missing fixed setting: {fragment!r}")
+    if settings.get("model") != "claude-fable-5":
+        errors.append('Claude settings must fix model = "claude-fable-5"')
+    permissions = settings.get("permissions")
+    if not isinstance(permissions, dict):
+        errors.append("Claude settings must contain a permissions object")
+        return
+    if permissions.get("defaultMode") != "acceptEdits":
+        errors.append('Claude settings must fix permissions.defaultMode = "acceptEdits"')
+    deny = permissions.get("deny")
+    deny_rules = [rule for rule in deny if isinstance(rule, str)] if isinstance(deny, list) else []
+    for required in ["git push --force", "git push -f"]:
+        if not any(required in rule for rule in deny_rules):
+            errors.append(f"Claude settings must deny force pushes matching {required!r}")
 
 
 def validate_ledger(errors: list[str]) -> dict[str, Any]:
@@ -497,8 +492,10 @@ def validate_workspace() -> ValidationResult:
     required_paths = [
         "PREREGISTRATION.md",
         "GENESIS_CHARTER.md",
+        "CLAUDE.md",
         "AGENTS.md",
-        ".codex/config.toml",
+        "CLOUD_ENVIRONMENT.md",
+        ".claude/settings.json",
         "TOOL_MANIFEST.md",
         "STATE.json",
         "RUN_LOCK.json",
@@ -513,7 +510,6 @@ def validate_workspace() -> ValidationResult:
         "prompts/EVALUATOR.md",
         "AUTOMATIONS.md",
         "OPERATIONS.md",
-        "MACHINE_READINESS.md",
         "READINESS_EVIDENCE.md",
     ]
     for relative in required_paths:
@@ -544,10 +540,11 @@ def validate_workspace() -> ValidationResult:
     try:
         state = load_json(ROOT / "STATE.json")
         if state.get("model") != {
-            "name": "gpt-5.6-sol",
-            "reasoning_effort": "high",
-            "service_tier": "default",
-            "subagents_enabled": False,
+            "name": "claude-fable-5",
+            "effort": "high",
+            "platform": "claude-code-cloud",
+            "persistent_agents": 1,
+            "ephemeral_subagents": "research_only",
         }:
             errors.append("STATE.json model parameters do not match the frozen protocol")
         if ledger and money(state["treasury"]["current_cash"], field="state current_cash") != money(

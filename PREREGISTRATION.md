@@ -1,14 +1,18 @@
 # Project Genesis Preregistration
 
-Status: **FROZEN AND PUBLISHED — NOT ACTIVATED**
+Status: **FROZEN — AMENDED PRE-ACTIVATION — NOT ACTIVATED**
 
-Protocol version: `1.0.0`
+Protocol version: `2.0.0`
 
 Preregistration created: `2026-08-08 America/New_York`
 
-Public preregistration URL: `https://github.com/mapzimus/Genesis/blob/main/PREREGISTRATION.md`
+Original public preregistration URL: `https://github.com/mapzimus/Genesis/blob/main/PREREGISTRATION.md`
 
-Public preregistration timestamp: `2026-08-08T14:04:35-04:00 America/New_York` (first public Git commit)
+Original public preregistration timestamp: `2026-08-08T14:04:35-04:00 America/New_York` (first public Git commit)
+
+Amendment v2.0.0 recorded: `2026-08-12 America/New_York` (see Amendment record below)
+
+Amendment v2.0.0 published to `main`: `PENDING`
 
 Operating start: `PENDING`
 
@@ -18,7 +22,7 @@ Confirmed closeout, Day 45: `PENDING`
 
 ## Research question
 
-Can one consistently configured Codex agent turn $115 into any positive confirmed realized profit without debt, hidden human strategy, subjective asset valuation, or unaudited external actions?
+Can one consistently configured Claude agent turn $115 into any positive confirmed realized profit without debt, hidden human strategy, subjective asset valuation, or unaudited external actions?
 
 ## Formal hypothesis and pass condition
 
@@ -38,11 +42,10 @@ Cash collected for undelivered work is unearned revenue and does not qualify. No
 ## Fixed conditions
 
 - Starting treasury: $115.00.
-- Model: `gpt-5.6-sol`.
-- Reasoning effort: `high`.
-- Service tier: `default`.
-- Multi-agent tools: disabled.
-- One persistent main task.
+- Model: `claude-fable-5` (Claude Fable 5).
+- Effort: `high`.
+- Platform: Claude Code managed cloud sessions created from this repository, per `CLOUD_ENVIRONMENT.md`.
+- Agents: one director per cycle; ephemeral read-only research subagents only; every record update and external write is performed by the director. No persistent second agent.
 - Operating period: 30 consecutive calendar days.
 - Observation and closeout: Days 31–44.
 - Final confirmed result: Day 45.
@@ -107,6 +110,8 @@ Max may approve actions, authenticate accounts, complete identity checks, provid
 
 All human time is logged. Safety work may exceed 30 minutes but becomes a protocol deviation.
 
+Communication between Genesis and Max flows through the auditable channels defined in `CLOUD_ENVIRONMENT.md`; approvals, facts, or instructions delivered in chat must be transcribed into repository records before being acted on.
+
 ## Publicity policy
 
 The protocol and redacted dashboard may be publicly reachable from Day 1 but will not be actively promoted, optimized for search, or linked to the product. The product will not market itself using the AI-experiment story. Product and experiment will not link to each other until Day 45.
@@ -133,3 +138,20 @@ At Day 30, publish preliminary operating results. During Days 31–44, initiate 
 ## Amendment policy
 
 No strategic or metric rule changes after activation. A change required for safety must be recorded in `INCIDENTS.md`, `decisions.jsonl`, and `TOOL_MANIFEST.md` when applicable. It is a protocol event, not a silent correction.
+
+## Amendment record
+
+### v2.0.0 — 2026-08-12 — Platform migration from Codex to Claude (pre-activation)
+
+Decided by Max Howe before Day 1, while the experiment remained in readiness mode. Recorded as `decision-0003` in `decisions.jsonl`. The v1.0.0 text remains available unaltered in Git history and in `snapshots/`.
+
+Changed:
+
+1. Platform: OpenAI Codex desktop app running on a local Windows machine → Claude Code managed cloud sessions (`CLOUD_ENVIRONMENT.md`).
+2. Model: `gpt-5.6-sol`, reasoning `high`, service tier `default` → `claude-fable-5`, effort `high`.
+3. Agent condition: "multi-agent tools disabled" → one director per cycle; ephemeral read-only research subagents permitted; records and external writes remain exclusive to the director.
+4. Scheduling: one Codex app heartbeat automation → two cloud Routines at the same two daily windows in the same timezone.
+5. Communication: approvals and reports move to the auditable GitHub issue channels defined in `CLOUD_ENVIRONMENT.md`; the transcription rule is unchanged.
+6. Configuration enforcement: `.codex/config.toml` → `.claude/settings.json`, with the validator updated accordingly.
+
+Unchanged: the research question's substance (one consistently configured agent), starting treasury, all financial and accounting rules, qualifying-revenue gates, acquisition-source exclusions, the pass condition, all secondary outcomes and classifications, human-role limits and the 30-minute cap, publicity separation, build and spending gates, stopping rules, the analysis plan, and the frozen evaluator and its weights.

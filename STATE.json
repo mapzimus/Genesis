@@ -1,5 +1,5 @@
 {
-  "protocol_version": "1.0.0",
+  "protocol_version": "2.0.0",
   "status": "readiness",
   "timezone": "America/New_York",
   "experiment_start": null,
@@ -8,10 +8,11 @@
   "current_day": 0,
   "phase": "pre_experiment_readiness",
   "model": {
-    "name": "gpt-5.6-sol",
-    "reasoning_effort": "high",
-    "service_tier": "default",
-    "subagents_enabled": false
+    "name": "claude-fable-5",
+    "effort": "high",
+    "platform": "claude-code-cloud",
+    "persistent_agents": 1,
+    "ephemeral_subagents": "research_only"
   },
   "treasury": {
     "starting_cash": 115.0,
@@ -29,18 +30,19 @@
   "pending_external_actions": [],
   "customer_obligations": [],
   "unresolved_incidents": [],
-  "next_permitted_action": "Complete readiness checklist; do not begin opportunity research.",
+  "next_permitted_action": "Merge the v2.0.0 migration pull request to main, record the amendment timestamp, then continue the readiness checklist; do not begin opportunity research.",
   "readiness": {
-    "trusted_project_task_opened": false,
+    "amended_preregistration_published": false,
+    "cloud_session_config_verified": false,
+    "records_push_verified": false,
     "dedicated_email_ready": false,
     "payment_method_ready": false,
     "preview_hosting_ready": true,
     "treasury_separated": false,
-    "keep_awake_configured": true,
     "dashboard_publish_path_ready": true,
     "acceptance_tests_passed": true,
     "cold_resume_audit_passed": true,
-    "preregistration_published": true,
+    "routines_created": false,
     "operator_schedule_tested": false,
     "close_schedule_tested": false
   },

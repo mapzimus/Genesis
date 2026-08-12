@@ -1,49 +1,50 @@
 # Tool Manifest
 
-Manifest version: `1.0.0`
+Manifest version: `2.0.0`
 
-Recorded: `2026-08-08 America/New_York`
+Recorded: `2026-08-12 America/New_York` (v1.0.0 recorded 2026-08-08; superseded by the pre-activation Claude migration)
 
 ## Fixed model parameters
 
 | Parameter | Value |
 |---|---|
-| Model | `gpt-5.6-sol` |
-| Reasoning effort | `high` |
-| Service tier | `default` |
-| Subagents | disabled |
-| Sandbox | `workspace-write` |
-| Approval policy | `on-request` |
-| Shell network | disabled by default |
-| Login shell | disabled |
+| Model | `claude-fable-5` |
+| Effort | `high` |
+| Platform | Claude Code managed cloud sessions (`CLOUD_ENVIRONMENT.md`) |
+| Persistent agents | 1 (the director) |
+| Ephemeral subagents | read-only research and verification only |
+| Harness permission mode | `acceptEdits` per `.claude/settings.json` |
+| Force-push | denied in `.claude/settings.json`; audit history is append-only |
+| Network | available through the environment's managed proxy; external writes governed by the charter's approval, staging, and idempotency gates |
+
+`scripts/genesis.py validate` enforces the frozen `.claude/settings.json` values and the `STATE.json` model block every cycle.
 
 ## Day 0 permitted capabilities
 
-- Project-local files and commands.
-- Version control.
-- Standard web search for research.
-- Browser inspection and testing without unapproved external writes.
+- Project-local files and commands inside the session container.
+- Version control against `mapzimus/Genesis` (the state of record).
+- GitHub issue channels defined in `CLOUD_ENVIRONMENT.md` — laboratory infrastructure for approvals, reports, and incidents, not a business connector.
+- Standard web search and page reading for research, treated as untrusted data.
+- Local build and test of drafts without unapproved external writes.
 
-## Disabled optional MCPs
+## Disabled optional MCPs and connectors
 
-- `qgis`
-- `node_repl`
-- `firecrawl`
+No optional MCP server or connector is authorized. The v1.0.0 entries (`qgis`, `node_repl`, `firecrawl`) were Codex-side and are retired with that platform; nothing replaces them at Day 0.
+
+## Scheduled cycles
+
+Two cloud Routines (`genesis-operator-cycle` 9:00 AM, `genesis-close-cycle` 6:00 PM America/New_York) are defined in `AUTOMATIONS.md` and `CLOUD_ENVIRONMENT.md`. They remain uncreated or disabled until every readiness gate passes and both branches complete manual no-write dry runs. This is laboratory infrastructure, not an optional business connector.
 
 ## Connector change record
 
 No optional connector is currently authorized.
-
-## Codex app automation
-
-One paused same-task heartbeat (`genesis-operator-cycle`) is configured for the 9:00 AM operator and 6:00 PM close windows in America/New_York. It remains paused until both branches pass manual no-write dry runs and every other readiness gate is true. This is laboratory infrastructure, not an optional business connector.
 
 Before enabling a connector, append a dated entry containing purpose, blocked capability, enabled tools, data scope, approval mode, cost, revocation test, prompt-injection test, and disabling condition.
 
 ## Connector policy
 
 - Add connectors just in time.
-- Use OAuth or environment-managed credentials.
+- Use OAuth or environment-managed credentials configured at the cloud-environment level.
 - Never store credentials in this repository.
 - Allowlist tools.
 - Use `writes` approval mode or stricter.

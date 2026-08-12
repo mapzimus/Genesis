@@ -2,11 +2,17 @@
 
 Record only non-sensitive evidence. Do not include an email address, account number, payment token, credential, recovery code, legal identifier, or customer information in this public repository.
 
-## Trusted Codex project task
+## Amended preregistration published
 
-- Task ID: `PENDING`
-- Repository working directory verified: `PENDING`
-- Project config loaded and fixed parameters verified: `PENDING`
+- Migration pull request merged to `main`: `PENDING`
+- Amendment public timestamp recorded in `PREREGISTRATION.md`: `PENDING`
+- Recorded at: `PENDING`
+
+## Cloud session configuration
+
+- Fresh-session `CLAUDE.md` auto-load verified: `PENDING`
+- Fixed model parameters reported by the session: `PENDING`
+- Records push to `main` demonstrated from a cycle: `PENDING`
 - Recorded at: `PENDING`
 
 ## Dedicated email
@@ -32,9 +38,16 @@ Record only non-sensitive evidence. Do not include an email address, account num
 - No debt or credit facility attached: `PENDING`
 - Confirmed by Max at: `PENDING`
 
+## Routines
+
+- `genesis-operator-cycle` Routine ID: `PENDING`
+- `genesis-close-cycle` Routine ID: `PENDING`
+- Completion notifications (push and email) confirmed: `PENDING`
+- Recorded at: `PENDING`
+
 ## Operator dry run
 
-- Task ID: `PENDING`
+- Session ID: `PENDING`
 - Timestamp: `PENDING`
 - Readiness branch correctly blocked market research: `PENDING`
 - Lock acquisition/overlap/release behavior: `PENDING`
@@ -42,7 +55,7 @@ Record only non-sensitive evidence. Do not include an email address, account num
 
 ## Close dry run
 
-- Task ID: `PENDING`
+- Session ID: `PENDING`
 - Timestamp: `PENDING`
 - No outreach or spending initiated: `PENDING`
 - Reconciliation/dashboard/snapshot behavior: `PENDING`

@@ -1,16 +1,25 @@
 # Genesis Scheduled Cycles
 
-App automation ID: `genesis-operator-cycle`
+Status: **NOT CREATED — DO NOT ACTIVATE BEFORE DAY 1**
 
-Status: **PAUSED — DO NOT ACTIVATE BEFORE DAY 1**
+The v1.0.0 Codex desktop-app automation (`genesis-operator-cycle`, paused) is retired with that platform. Scheduling now uses two cloud Routines that each create a fresh Claude Code session in this repository's environment, per `CLOUD_ENVIRONMENT.md`.
 
-The paused automation is attached to the staging task that created this repository. Before activation, open the repository itself as a trusted Codex project task and recreate or move the automation there. Otherwise `.codex/config.toml` is not guaranteed to govern the scheduled run.
+## Routine definitions
 
-The Codex app currently permits one heartbeat automation per task, so one same-task automation contains both frozen daily windows:
+| Name | Cron (UTC, while EDT) | Local window | Prompt |
+|---|---|---|---|
+| `genesis-operator-cycle` | `0 13 * * *` | 9:00 AM America/New_York | Read `CLAUDE.md`, then follow `prompts/OPERATOR_CYCLE.md` exactly. |
+| `genesis-close-cycle` | `0 22 * * *` | 6:00 PM America/New_York | Read `CLAUDE.md`, then follow `prompts/CLOSE_CYCLE.md` exactly. |
 
-- 9:00 AM America/New_York: operator cycle from `prompts/OPERATOR_CYCLE.md`.
-- 6:00 PM America/New_York: close cycle from `prompts/CLOSE_CYCLE.md`.
+- Each firing creates a fresh session (cold resume from `main`); no session state carries between firings.
+- Completion notifications: push and email to Max on every firing.
+- The Routine prompt is a bootstrap pointer only; the governing instructions are the version-controlled files in `prompts/`, so cycle behavior changes are auditable commits.
+- If Day 1 falls after 2026-09-17, apply the DST shift documented in `CLOUD_ENVIRONMENT.md` on 2026-11-01 and record it in `decisions.jsonl`.
 
-The automation first calls the executable `start-cycle` gate. Readiness mode, a false readiness item, incomplete activation dates, validation failure, or an existing lock blocks acquisition before research or external action.
+## Activation gate
 
-Before activation, manually invoke both branches as no-write dry runs from that trusted project task, log the tests, confirm the machine remains awake, and set the two schedule readiness fields to true.
+Create the Routines during readiness, from a session Max supervises. Firing before activation is safe by construction — the executable `start-cycle` gate blocks on readiness mode, false readiness items, incomplete activation dates, validation failure, or an existing lock before any research or external action — but the Routines still must not be created before both branches pass manual no-write dry runs:
+
+1. Manually invoke the operator branch in a fresh cloud session; confirm it blocks in readiness mode without research, external action, or record damage, and that a records push to `main` lands.
+2. Manually invoke the close branch the same way; confirm reconciliation, snapshot, and dashboard behavior with no outreach or spending.
+3. Log both tests in `READINESS_EVIDENCE.md`, set the two schedule readiness fields true, and record the created Routine IDs.
