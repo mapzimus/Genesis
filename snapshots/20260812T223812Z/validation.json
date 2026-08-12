@@ -1,0 +1,51 @@
+{
+  "validated_at": "2026-08-12T22:38:12+00:00",
+  "errors": [],
+  "warnings": [
+    "Experiment remains in readiness mode; Day 1 has not started"
+  ],
+  "summary": {
+    "ledger": {
+      "cash": 115.0,
+      "earned_revenue": 0.0,
+      "unearned_revenue": 0.0,
+      "expenses": 0.0,
+      "fees": 0.0,
+      "refunds_chargebacks": 0.0,
+      "confirmed_realized_profit": 0.0,
+      "market_only_profit_conservative": 0.0,
+      "publicity_earned_revenue": 0.0,
+      "entry_count": 1
+    },
+    "secondary_costs": {
+      "human_minutes": 20.0,
+      "human_cost_at_25_per_hour": 8.33,
+      "incremental_ai_connector_cost_not_in_treasury": 0.0,
+      "imputed_free_service_cost": 0.0
+    },
+    "decisions": {
+      "decision_count": 5
+    },
+    "actions": {
+      "planned_actions": 4,
+      "executing_actions": 0,
+      "completed_actions": 4
+    },
+    "status": "readiness"
+  },
+  "hashes": {
+    "PREREGISTRATION.md": "e384fea893be71ba69aa5394a6b98b8a5eb8f658feff2a5aab107c2399d270d8",
+    "STATE.json": "7a37609a2b262e9a538972c0dd07b2841b807d68e47e8609aee4d3a7ff178749",
+    "economic-costs.csv": "092b039e45773e8eea32646394d9b2aaef2c8ab1508d280eba84bdc606167c26",
+    "external-actions.jsonl": "6979f38e378cf85896ed5ead2bbadf8181083e3059161f0dac08533e97d0fb26",
+    "treasury.csv": "e043a3be19e6723b90627a2e858e1ab0bfbf122356ac0076c79c1e3053a4e9e1",
+    "approvals.csv": "fd1fceb1236d94b1e333ada632e6781fd50fbc259e1fe0353792e285ee445c30",
+    "metrics.csv": "be1f937df5eb684862c0e41eca973c9f64571f85e11735eb4e268122c2d2354c",
+    "decisions.jsonl": "dfa96bcfb6ecca96bf4e90f3501237790fa1eb053d18cd05245b3c12401ccb91",
+    "RUN_LOCK.json": "d7f3ae93ca7ad971b67a79274d65245a904f3bdc9cd470969131764ce2e77455",
+    "interventions.csv": "2e95a6abdf77a291dbc4c80aaee5d31766b488a6abd242c6550b58d8b3c6f806",
+    "INCIDENTS.md": "fe0df002e460cad31a7e0dfb7b46d557a9846a597ae12cedb4bdde773523a65d",
+    "TOOL_MANIFEST.md": "1e5ee20b0dd242391571c27356d8855ad36d74c0915ac6ed8df22bed3ce90bfa",
+    "GENESIS_CHARTER.md": "82707a9545b99e4aefc3acd81469b4ae7af0155c37c4667767714b93fe5d877f"
+  }
+}

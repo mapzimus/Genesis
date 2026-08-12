@@ -1,0 +1,4 @@
+intervention_id,timestamp_et,duration_minutes,window,category,description,strategic_direction,protocol_deviation,notes
+
+int-0001,2026-08-12T09:38:00-04:00,10,readiness,direction_and_approval,Directed the Codex-to-Claude platform migration and cloud environment design in a Claude Code session; approval basis for apr-migration-claude-003,false,false,Duration is an estimate pending Max's confirmation; logged retroactively per the 2026-08-12 post-merge audit.
+int-0002,2026-08-12T18:28:54-04:00,10,readiness,review_and_merge,"Reviewed pull request #1, marked it ready, and merged it, publishing protocol v2.0.0; approval basis for apr-migration-timestamp-004",false,false,Duration is an estimate pending Max's confirmation; logged retroactively per the 2026-08-12 post-merge audit.
