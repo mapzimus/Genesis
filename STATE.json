@@ -30,9 +30,9 @@
   "pending_external_actions": [],
   "customer_obligations": [],
   "unresolved_incidents": [],
-  "next_permitted_action": "Await Max's review and merge of draft pull request #1 (branch claude/agent-cloud-environment-990zct); after the merge, record the amendment timestamp in PREREGISTRATION.md and continue the readiness checklist; do not begin opportunity research.",
+  "next_permitted_action": "Await Max's merge of the post-merge records pull request (branch claude/agent-cloud-environment-990zct), then continue the remaining readiness items: cloud session config verification, records-push demonstration, dedicated email, payment method, treasury envelope, Routine creation, and both cycle dry runs; do not begin opportunity research.",
   "readiness": {
-    "amended_preregistration_published": false,
+    "amended_preregistration_published": true,
     "cloud_session_config_verified": false,
     "records_push_verified": false,
     "dedicated_email_ready": false,
@@ -41,7 +41,7 @@
     "treasury_separated": false,
     "dashboard_publish_path_ready": true,
     "acceptance_tests_passed": true,
-    "cold_resume_audit_passed": false,
+    "cold_resume_audit_passed": true,
     "routines_created": false,
     "operator_schedule_tested": false,
     "close_schedule_tested": false

@@ -4,9 +4,9 @@ Record only non-sensitive evidence. Do not include an email address, account num
 
 ## Amended preregistration published
 
-- Migration pull request merged to `main`: `PENDING`
-- Amendment public timestamp recorded in `PREREGISTRATION.md`: `PENDING`
-- Recorded at: `PENDING`
+- Migration pull request merged to `main`: pull request #1, merge commit `387e0c5`, merged by the repository owner
+- Amendment public timestamp recorded in `PREREGISTRATION.md`: `2026-08-12T18:28:54-04:00`
+- Recorded at: `2026-08-12T18:50:00-04:00`
 
 ## Cloud session configuration
 
@@ -18,8 +18,8 @@ Record only non-sensitive evidence. Do not include an email address, account num
 
 ## Post-merge cold-resume re-audit
 
-- Read-only audit re-run after the migration merged to `main`: `PENDING`
-- Verdict recorded in `daily-reports/`: `PENDING`
+- Read-only audit re-run after the migration merged to `main`: `2026-08-12`, against commit `387e0c5`, by an ephemeral read-only subagent
+- Verdict recorded in `daily-reports/`: PASS — `daily-reports/2026-08-12-postmerge-audit.md`
 
 ## Dedicated email
 

@@ -12,7 +12,7 @@ Original public preregistration timestamp: `2026-08-08T14:04:35-04:00 America/Ne
 
 Amendment v2.0.0 recorded: `2026-08-12 America/New_York` (see Amendment record below)
 
-Amendment v2.0.0 published to `main`: `PENDING`
+Amendment v2.0.0 published to `main`: `2026-08-12T18:28:54-04:00` (merge commit `387e0c5` of pull request #1)
 
 Operating start: `PENDING`
 
