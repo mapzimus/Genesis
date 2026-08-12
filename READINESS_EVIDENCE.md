@@ -12,8 +12,14 @@ Record only non-sensitive evidence. Do not include an email address, account num
 
 - Fresh-session `CLAUDE.md` auto-load verified: `PENDING`
 - Fixed model parameters reported by the session: `PENDING`
+- Session effort level confirmed `high`: `PENDING`
 - Records push to `main` demonstrated from a cycle: `PENDING`
 - Recorded at: `PENDING`
+
+## Post-merge cold-resume re-audit
+
+- Read-only audit re-run after the migration merged to `main`: `PENDING`
+- Verdict recorded in `daily-reports/`: `PENDING`
 
 ## Dedicated email
 

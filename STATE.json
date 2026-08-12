@@ -27,10 +27,12 @@
   "active_hypothesis": null,
   "active_initiatives": [],
   "pending_approvals": [],
-  "pending_external_actions": [],
+  "pending_external_actions": [
+    "act-migration-claude-003: publish migration branch claude/agent-cloud-environment-990zct and open a draft pull request (run-820453f7-0b19-43e4-a4d5-e990cd06a880)"
+  ],
   "customer_obligations": [],
   "unresolved_incidents": [],
-  "next_permitted_action": "Merge the v2.0.0 migration pull request to main, record the amendment timestamp, then continue the readiness checklist; do not begin opportunity research.",
+  "next_permitted_action": "Complete act-migration-claude-003: publish branch claude/agent-cloud-environment-990zct with its draft pull request, then await Max's merge to main, record the amendment timestamp, and continue the readiness checklist; do not begin opportunity research.",
   "readiness": {
     "amended_preregistration_published": false,
     "cloud_session_config_verified": false,
@@ -41,7 +43,7 @@
     "treasury_separated": false,
     "dashboard_publish_path_ready": true,
     "acceptance_tests_passed": true,
-    "cold_resume_audit_passed": true,
+    "cold_resume_audit_passed": false,
     "routines_created": false,
     "operator_schedule_tested": false,
     "close_schedule_tested": false

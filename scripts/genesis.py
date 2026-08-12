@@ -510,6 +510,9 @@ def validate_workspace() -> ValidationResult:
         "prompts/EVALUATOR.md",
         "AUTOMATIONS.md",
         "OPERATIONS.md",
+        "README.md",
+        "READINESS.md",
+        "MACHINE_READINESS.md",
         "READINESS_EVIDENCE.md",
     ]
     for relative in required_paths:
