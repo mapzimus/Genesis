@@ -246,6 +246,17 @@ class GenesisAcceptanceTests(unittest.TestCase):
             self.assertIn(weight, evaluator)
         self.assertIn("fully loaded sensitivity", evaluator)
 
+    def test_frozen_model_config_is_enforced(self) -> None:
+        settings_path = self.root / ".claude" / "settings.json"
+        settings = genesis.load_json(settings_path)
+        settings["model"] = "claude-haiku-4-5"
+        settings["permissions"]["deny"] = []
+        genesis.save_json(settings_path, settings)
+        result = genesis.validate_workspace()
+        self.assertFalse(result.ok)
+        self.assertTrue(any('model = "claude-fable-5"' in error for error in result.errors))
+        self.assertTrue(any("deny force pushes" in error for error in result.errors))
+
     def test_state_cannot_activate_with_incomplete_readiness(self) -> None:
         state = genesis.load_json(self.root / "STATE.json")
         state["status"] = "active"

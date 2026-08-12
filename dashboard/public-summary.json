@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-08T18:06:57+00:00",
-  "protocol_version": "1.0.0",
+  "generated_at": "2026-08-12T14:04:41+00:00",
+  "protocol_version": "2.0.0",
   "status": "readiness",
   "day": 0,
   "phase": "pre_experiment_readiness",
