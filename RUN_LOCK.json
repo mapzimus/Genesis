@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "run_id": "run-411794ce-1d52-400f-89e7-ecf066822fa7",
+  "status": "active",
+  "run_id": "run-cd06ee35-f6ef-4959-8835-02cc80a7cdac",
   "task_type": "manual",
-  "started_at": "2026-08-13T16:48:47+00:00",
+  "started_at": "2026-08-13T17:02:59+00:00",
   "expected_max_minutes": 120,
-  "last_heartbeat": "2026-08-13T17:00:19+00:00",
-  "released_at": "2026-08-13T17:00:19+00:00",
-  "release_reason": "Routine creation completed; both Routines disabled"
+  "last_heartbeat": "2026-08-13T17:02:59+00:00",
+  "released_at": null,
+  "release_reason": null
 }
