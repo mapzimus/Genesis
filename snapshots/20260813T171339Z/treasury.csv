@@ -1,0 +1,2 @@
+entry_id,timestamp_et,event_type,description,counterparty_class,acquisition_source,cash_change,earned_revenue_change,unearned_revenue_change,expense_amount,fee_amount,profit_refund_amount,balance,qualifying_revenue,payment_settled,fees_known,delivered,material_obligation_remaining,transaction_valid,independent_customer,approval_id,receipt_ref,notes
+tx-0000,2026-08-08T00:00:00-04:00,owner_capital,Initial experiment treasury,owner,test,115.00,0.00,0.00,0.00,0.00,0.00,115.00,false,false,true,false,false,true,false,,,Starting capital is not revenue.

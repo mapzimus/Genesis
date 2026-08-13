@@ -58,21 +58,30 @@ Record only non-sensitive evidence. Do not include an email address, account num
 The provider warned that neither Routine stores MCP connectors, so a session it fires would start without GitHub issue tools. Git push over HTTPS is unaffected, so records and reports would still reach `main`, but the `approval-request` / `owner-note` / `incident` issue channels in `CLOUD_ENVIRONMENT.md` would be unreachable from a scheduled cycle. This must be resolved before enabling:
 
 - Resolution options: recreate both Routines from the claude.ai Routines UI with the GitHub connector attached, or create them from a session that holds a passable GitHub connector grant.
-- The operator dry run must explicitly confirm whether a fired session can read open issues; the close dry run must confirm whether it can post a report.
+- Confirmed by the 2026-08-13 dry runs: each Routine's stored `allowed_tools` list contains no `mcp__github__*` entries, so a fired session cannot read `approval-request` issues, transcribe owner decisions, post a `daily-report`, or open an `incident` issue.
 - Status: `UNRESOLVED`
 
 ## Operator dry run
 
-- Session ID: `PENDING`
-- Timestamp: `PENDING`
-- Readiness branch correctly blocked market research: `PENDING`
-- Lock acquisition/overlap/release behavior: `PENDING`
-- Repository changes: `PENDING`
+- Session ID: `cse_01FSHBBcRHXm4cSB9NgEkohz` (Routine `trig_01VqPMDoHhkXgokqw8mLspdb`)
+- Timestamp: `2026-08-13T17:03:22Z`, reached idle at `17:05:26Z`
+- Readiness branch correctly blocked market research: yes — no research, outreach, spending, or external action resulted
+- Lock acquisition/overlap/release behavior: correct — the director's lock `run-cd06ee35` remained active and owned throughout; the fired session never acquired, stole, or released it, because `start_cycle` evaluates the readiness gate before `acquire_lock`
+- Repository changes: none — `main` stayed at `8b8e61a` under continuous watch for 152 s, no new branches, director working tree untouched
+- Result: **not accepted.** Safe behavior, but the session ran on `claude-sonnet-5` and without GitHub issue tools. See `daily-reports/2026-08-13-dry-runs.md`. Must be repeated after the Routines are corrected.
 
 ## Close dry run
 
-- Session ID: `PENDING`
-- Timestamp: `PENDING`
-- No outreach or spending initiated: `PENDING`
-- Reconciliation/dashboard/snapshot behavior: `PENDING`
-- Repository changes: `PENDING`
+- Session ID: `cse_013D2hLVpBGNUaERhkcRXCwx` (Routine `trig_01BPPQKGmnTp7myYnicRDVap`)
+- Timestamp: `2026-08-13T17:06:37Z`, reached idle at `17:10:36Z`
+- No outreach or spending initiated: confirmed — none
+- Reconciliation/dashboard/snapshot behavior: not exercised, because the readiness gate correctly blocked the cycle before reconciliation; this must be re-verified after activation prerequisites are met
+- Repository changes: none — `main` stayed at `8b8e61a` under continuous watch for 175 s and on re-check, no new branches, director working tree untouched
+- Result: **not accepted.** Same two configuration defects as the operator run. Must be repeated after the Routines are corrected.
+
+### Open gap — wrong model in fired sessions
+
+Both fired sessions served `claude-sonnet-5`, not the preregistered `claude-fable-5`. The Routine's session configuration overrides the repository's `.claude/settings.json`. Scheduled cycles would therefore breach the fixed-model condition in `PREREGISTRATION.md`.
+
+- Resolution options: Max instructs the director to set the Routine model explicitly, or Max recreates both Routines with the model set (the same step that can attach the GitHub connector).
+- Status: `UNRESOLVED`
