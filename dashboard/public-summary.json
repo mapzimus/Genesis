@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13T17:13:39+00:00",
+  "generated_at": "2026-08-13T18:42:01+00:00",
   "protocol_version": "2.0.0",
   "status": "readiness",
   "day": 0,
@@ -18,10 +18,10 @@
   "active_hypothesis": null,
   "pending_approval_count": 0,
   "unresolved_incident_count": 0,
-  "human_minutes": 25.0,
-  "human_cost_at_25_per_hour": 10.42,
+  "human_minutes": 30.0,
+  "human_cost_at_25_per_hour": 12.5,
   "incremental_ai_connector_cost_not_in_treasury": 0.0,
   "imputed_free_service_cost": 0.0,
-  "fully_loaded_result": -10.42,
+  "fully_loaded_result": -12.5,
   "notice": "AI-directed experiment operated by Max Howe. Customer data is excluded."
 }

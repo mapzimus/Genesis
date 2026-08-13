@@ -59,7 +59,8 @@ The provider warned that neither Routine stores MCP connectors, so a session it 
 
 - Resolution options: recreate both Routines from the claude.ai Routines UI with the GitHub connector attached, or create them from a session that holds a passable GitHub connector grant.
 - Confirmed by the 2026-08-13 dry runs: each Routine's stored `allowed_tools` list contains no `mcp__github__*` entries, so a fired session cannot read `approval-request` issues, transcribe owner decisions, post a `daily-report`, or open an `incident` issue.
-- Status: `UNRESOLVED`
+- Resolution chosen by Max on 2026-08-13: he will attach the GitHub connector to both Routines in the claude.ai Routines UI, keeping the issue-based communication design unchanged. This is owner-side work; the director cannot pass a connector grant it does not hold.
+- Status: `UNRESOLVED — awaiting Max's UI change`. When Max confirms it, repeat both dry runs and verify a fired session can read an issue and post a comment.
 
 ## Operator dry run
 
@@ -79,9 +80,9 @@ The provider warned that neither Routine stores MCP connectors, so a session it 
 - Repository changes: none — `main` stayed at `8b8e61a` under continuous watch for 175 s and on re-check, no new branches, director working tree untouched
 - Result: **not accepted.** Same two configuration defects as the operator run. Must be repeated after the Routines are corrected.
 
-### Open gap — wrong model in fired sessions
+### Closed gap — wrong model in fired sessions
 
-Both fired sessions served `claude-sonnet-5`, not the preregistered `claude-fable-5`. The Routine's session configuration overrides the repository's `.claude/settings.json`. Scheduled cycles would therefore breach the fixed-model condition in `PREREGISTRATION.md`.
+Both fired sessions served `claude-sonnet-5`, not the preregistered `claude-fable-5`. The Routine's session configuration overrides the repository's `.claude/settings.json`, so scheduled cycles would have breached the fixed-model condition in `PREREGISTRATION.md`.
 
-- Resolution options: Max instructs the director to set the Routine model explicitly, or Max recreates both Routines with the model set (the same step that can attach the GitHub connector).
-- Status: `UNRESOLVED`
+- Resolution: Max chose to have the director set the model directly. Both Routines were updated on 2026-08-13 under `apr-model-007` / `act-model-007`; each now reports `model: claude-fable-5` in its session configuration, with cron, prompt, notifications, environment, and disabled state unchanged.
+- Status: `RESOLVED IN CONFIGURATION` — still to be confirmed live by the repeated dry runs.
