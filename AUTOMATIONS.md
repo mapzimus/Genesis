@@ -1,6 +1,6 @@
 # Genesis Scheduled Cycles
 
-Status: **NOT CREATED — DO NOT ACTIVATE BEFORE DAY 1**
+Status: **CREATED AND DISABLED — DO NOT ENABLE BEFORE THE DRY RUNS PASS**
 
 The v1.0.0 Codex desktop-app automation (`genesis-operator-cycle`, paused) is retired with that platform. Scheduling now uses two cloud Routines that each create a fresh Claude Code session in this repository's environment, per `CLOUD_ENVIRONMENT.md`.
 
@@ -18,8 +18,13 @@ The v1.0.0 Codex desktop-app automation (`genesis-operator-cycle`, paused) is re
 
 ## Activation gate
 
-Create the Routines during readiness, from a session Max supervises. Firing before activation is safe by construction — the executable `start-cycle` gate blocks on readiness mode, false readiness items, incomplete activation dates, validation failure, or an existing lock before any research or external action — but the Routines still must not be created before both branches pass manual no-write dry runs:
+The Routines were created during readiness, from a session Max directed, and were disabled immediately. A disabled Routine never fires, so creation is safe at any point; **enabling** is what the dry runs gate. Firing is additionally safe by construction — the executable `start-cycle` gate blocks on readiness mode, false readiness items, incomplete activation dates, validation failure, or an existing lock before any research or external action — but that backstop is not a substitute for the dry runs.
+
+Before enabling either Routine:
 
 1. Manually invoke the operator branch in a fresh cloud session; confirm it blocks in readiness mode without research, external action, or record damage, and that a records push to `main` lands.
 2. Manually invoke the close branch the same way; confirm reconciliation, snapshot, and dashboard behavior with no outreach or spending.
-3. Log both tests in `READINESS_EVIDENCE.md`, set the two schedule readiness fields true, and record the created Routine IDs.
+3. Log both tests in `READINESS_EVIDENCE.md` and set the two schedule readiness fields true.
+4. Enable both Routines only after every other readiness item is true and Day 1 is selected, then record the enable in `decisions.jsonl`.
+
+Recorded Routine IDs are in `READINESS_EVIDENCE.md`.

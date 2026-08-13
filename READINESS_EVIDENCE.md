@@ -46,10 +46,20 @@ Record only non-sensitive evidence. Do not include an email address, account num
 
 ## Routines
 
-- `genesis-operator-cycle` Routine ID: `PENDING`
-- `genesis-close-cycle` Routine ID: `PENDING`
-- Completion notifications (push and email) confirmed: `PENDING`
-- Recorded at: `PENDING`
+- `genesis-operator-cycle` Routine ID: `trig_01VqPMDoHhkXgokqw8mLspdb`, cron `0 13 * * *` UTC (9:00 AM America/New_York)
+- `genesis-close-cycle` Routine ID: `trig_01BPPQKGmnTp7myYnicRDVap`, cron `0 22 * * *` UTC (6:00 PM America/New_York)
+- Environment: `env_01FpWyRFDFdtNACAXGkYHnjz`; each firing creates a fresh session
+- Completion notifications (push and email) configured: yes, on both
+- Current state: **disabled**. Both were created enabled by the API and disabled immediately in the same run, per `CLOUD_ENVIRONMENT.md`. Enabling is gated on both dry runs and the rest of the checklist.
+- Recorded at: `2026-08-13T12:59:00-04:00`
+
+### Open gap — connector access in fired sessions
+
+The provider warned that neither Routine stores MCP connectors, so a session it fires would start without GitHub issue tools. Git push over HTTPS is unaffected, so records and reports would still reach `main`, but the `approval-request` / `owner-note` / `incident` issue channels in `CLOUD_ENVIRONMENT.md` would be unreachable from a scheduled cycle. This must be resolved before enabling:
+
+- Resolution options: recreate both Routines from the claude.ai Routines UI with the GitHub connector attached, or create them from a session that holds a passable GitHub connector grant.
+- The operator dry run must explicitly confirm whether a fired session can read open issues; the close dry run must confirm whether it can post a report.
+- Status: `UNRESOLVED`
 
 ## Operator dry run
 
