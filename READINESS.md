@@ -4,7 +4,7 @@ Day 1 is blocked until every box below is complete. Completing the workspace and
 
 Each box maps to the identically ordered flag in `STATE.json.readiness`; the checklist and the flags must always agree.
 
-- [ ] `amended_preregistration_published` — Merge migration branch `claude/agent-cloud-environment-990zct` (its draft pull request) to `main`, then record the amendment's public timestamp in `PREREGISTRATION.md`. The v1.0.0 preregistration and frozen evaluator were published and timestamped 2026-08-08.
+- [x] `amended_preregistration_published` — Max merged migration pull request #1 to `main` at `2026-08-12T18:28:54-04:00` (commit `387e0c5`); the timestamp is recorded in `PREREGISTRATION.md`. The v1.0.0 preregistration and frozen evaluator were published and timestamped 2026-08-08.
 - [ ] `cloud_session_config_verified` — A fresh Claude Code cloud session created from this repository loads `CLAUDE.md` automatically and reports the fixed parameters, including `high` effort (replaces the v1 trusted-Codex-task item).
 - [ ] `records_push_verified` — A cloud session demonstrates the push discipline: a records commit lands on `main` from inside a cycle (replaces the v1 keep-awake item).
 - [ ] `dedicated_email_ready` — Dedicated Genesis email exists and authentication works.
@@ -13,7 +13,7 @@ Each box maps to the identically ordered flag in `STATE.json.readiness`; the che
 - [ ] `treasury_separated` — Exactly $115 is separated in the accounting envelope.
 - [x] `dashboard_publish_path_ready` — A safe public path exists at `https://mapzimus.github.io/Genesis/`.
 - [x] `acceptance_tests_passed` — The automated acceptance suite passes (17/17 on 2026-08-12).
-- [ ] `cold_resume_audit_passed` — A separate read-only task reconstructs the experiment state from repository files only. PASS on 2026-08-08 (v1.0.0). The 2026-08-12 post-migration re-audit returned FAIL on the pre-publication state (`daily-reports/2026-08-12-migration-audit.md`); re-run after the migration merges to `main`.
+- [x] `cold_resume_audit_passed` — A separate read-only task reconstructs the experiment state from repository files only. PASS on 2026-08-08 (v1.0.0). The 2026-08-12 pre-publication re-audit returned FAIL (`daily-reports/2026-08-12-migration-audit.md`); after the merge, the re-audit of `main` at `387e0c5` returned PASS (`daily-reports/2026-08-12-postmerge-audit.md`).
 - [ ] `routines_created` — Both Routines are created per `AUTOMATIONS.md` and their IDs recorded in `READINESS_EVIDENCE.md`.
 - [ ] `operator_schedule_tested` — Operator cycle has completed a no-write manual dry run in the cloud environment.
 - [ ] `close_schedule_tested` — Close cycle has completed a no-write manual dry run in the cloud environment.
