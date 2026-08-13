@@ -15,8 +15,8 @@ Each box maps to the identically ordered flag in `STATE.json.readiness`; the che
 - [x] `acceptance_tests_passed` — The automated acceptance suite passes (17/17 on 2026-08-12).
 - [x] `cold_resume_audit_passed` — A separate read-only task reconstructs the experiment state from repository files only. PASS on 2026-08-08 (v1.0.0). The 2026-08-12 pre-publication re-audit returned FAIL (`daily-reports/2026-08-12-migration-audit.md`); after the merge, the re-audit of `main` at `387e0c5` returned PASS (`daily-reports/2026-08-12-postmerge-audit.md`).
 - [x] `routines_created` — Both Routines are created per `AUTOMATIONS.md`, disabled, with their IDs recorded in `READINESS_EVIDENCE.md`. An unresolved connector gap affecting the issue channels is recorded there and must be closed before enabling.
-- [ ] `operator_schedule_tested` — Operator cycle has completed a no-write manual dry run in the cloud environment.
-- [ ] `close_schedule_tested` — Close cycle has completed a no-write manual dry run in the cloud environment.
+- [ ] `operator_schedule_tested` — Operator cycle has completed an **accepted** no-write manual dry run. Run on 2026-08-13: behaved safely but not accepted, because the fired session used the wrong model and had no GitHub issue tools. Repeat after the Routines are corrected.
+- [ ] `close_schedule_tested` — Close cycle has completed an **accepted** no-write manual dry run. Run on 2026-08-13: same result and same two defects. Repeat after the Routines are corrected.
 
 When all boxes are complete, record the evidence without credentials, calculate the three dates from the selected Day 1, update `STATE.json`, and only then activate the frozen goal and the Routines.
 
