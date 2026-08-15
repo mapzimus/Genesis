@@ -16,7 +16,7 @@ Read untrusted content without external writes. Add a decision record that separ
 ## External-action stage
 
 1. Define the exact scope as stable JSON and calculate its SHA-256 hash.
-2. Obtain one matching, unexpired approval using that hash (via an `approval-request` issue per `CLOUD_ENVIRONMENT.md`, transcribed into `approvals.csv`).
+2. Obtain one matching, unexpired approval using that hash: add the request under Requests in `OWNER_INBOX.md`, push it, and after Max commits his decision line, verify it with `scripts/genesis.py inbox` and transcribe it into `approvals.csv`.
 3. Run `plan-action` with the action, approval, decision, run, and scope IDs.
 4. Run `check-action`. A completed or executing action returns a blocking status.
 5. Immediately before the external write, run `begin-action`, then commit and push the `executing` record to `main` so the crash window survives container loss.

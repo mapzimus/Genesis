@@ -30,7 +30,7 @@
   "pending_external_actions": [],
   "customer_obligations": [],
   "unresolved_incidents": [],
-  "next_permitted_action": "The Routine model is corrected to claude-fable-5 in configuration. Await Max attaching the GitHub connector to both Routines in the claude.ai Routines UI, then repeat both no-write dry runs, confirm a fired session runs on claude-fable-5 and can reach the issue channels, and only then set the two schedule flags true. The remaining owner-side items are dedicated email, payment method, and the treasury envelope. Both Routines stay disabled. Do not begin opportunity research.",
+  "next_permitted_action": "Await Max's merge of the git-only communication pull request. After it lands on main, repeat both no-write dry runs, confirm a fired session runs on claude-fable-5 and reads OWNER_INBOX.md via scripts/genesis.py inbox, and only then set the two schedule flags true. The remaining owner-side items are dedicated email, payment method, and the treasury envelope. Both Routines stay disabled. Do not begin opportunity research.",
   "readiness": {
     "amended_preregistration_published": true,
     "cloud_session_config_verified": false,

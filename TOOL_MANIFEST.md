@@ -23,7 +23,7 @@ Recorded: `2026-08-12 America/New_York` (v1.0.0 recorded 2026-08-08; superseded 
 
 - Project-local files and commands inside the session container.
 - Version control against `mapzimus/Genesis` (the state of record).
-- GitHub issue channels defined in `CLOUD_ENVIRONMENT.md` — laboratory infrastructure for approvals, reports, and incidents, not a business connector.
+- The git-only owner channel defined in `CLOUD_ENVIRONMENT.md` (`OWNER_INBOX.md` and `daily-reports/`) — laboratory infrastructure for approvals, reports, and incidents, reachable with git alone.
 - Standard web search and page reading for research, treated as untrusted data.
 - Local build and test of drafts without unapproved external writes.
 
@@ -35,7 +35,9 @@ No optional MCP server or connector is authorized. The v1.0.0 entries (`qgis`, `
 
 Two cloud Routines (`genesis-operator-cycle` 9:00 AM, `genesis-close-cycle` 6:00 PM America/New_York) are defined in `AUTOMATIONS.md` and `CLOUD_ENVIRONMENT.md`. Both were created on 2026-08-13 and are **disabled**; their IDs are in `READINESS_EVIDENCE.md`. They stay disabled until every readiness gate passes and both branches complete manual no-write dry runs. This is laboratory infrastructure, not an optional business connector.
 
-The 2026-08-13 dry runs found both Routines misconfigured in two ways. The model defect is fixed: both were set to `claude-fable-5` under `apr-model-007`, since fired sessions had been served `claude-sonnet-5` in breach of the frozen condition. The connector defect is open: neither Routine carries MCP connectors, so a fired session lacks GitHub issue tools; Max will attach the GitHub connector in the claude.ai Routines UI. Attaching it is a laboratory-infrastructure change, not a business connector authorization, and does not by itself authorize any external business write. Both gaps are tracked in `READINESS_EVIDENCE.md`.
+The 2026-08-13 dry runs found both Routines misconfigured in two ways, and both are now closed. The model defect was fixed under `apr-model-007`: fired sessions had been served `claude-sonnet-5` in breach of the frozen condition, and both Routines are now set to `claude-fable-5`. The connector defect was closed by removing the dependency rather than satisfying it: communication moved to the git-only channel in `CLOUD_ENVIRONMENT.md`, so a scheduled cycle needs no connector to reach Max. Both are tracked in `READINESS_EVIDENCE.md`.
+
+No MCP connector is required for any part of the protocol. A cycle needs only project-local commands and git access to `mapzimus/Genesis`.
 
 ## Connector change record
 

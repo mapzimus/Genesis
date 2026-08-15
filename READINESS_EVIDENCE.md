@@ -53,14 +53,12 @@ Record only non-sensitive evidence. Do not include an email address, account num
 - Current state: **disabled**. Both were created enabled by the API and disabled immediately in the same run, per `CLOUD_ENVIRONMENT.md`. Enabling is gated on both dry runs and the rest of the checklist.
 - Recorded at: `2026-08-13T12:59:00-04:00`
 
-### Open gap — connector access in fired sessions
+### Closed gap — connector access in fired sessions
 
-The provider warned that neither Routine stores MCP connectors, so a session it fires would start without GitHub issue tools. Git push over HTTPS is unaffected, so records and reports would still reach `main`, but the `approval-request` / `owner-note` / `incident` issue channels in `CLOUD_ENVIRONMENT.md` would be unreachable from a scheduled cycle. This must be resolved before enabling:
+Neither Routine stores MCP connectors, so a fired session starts without GitHub issue tools. Confirmed by the 2026-08-13 dry runs: each Routine's stored `allowed_tools` list contains no `mcp__github__*` entries, so a fired session could not have read an `approval-request` issue, transcribed a decision, posted a `daily-report`, or opened an `incident`.
 
-- Resolution options: recreate both Routines from the claude.ai Routines UI with the GitHub connector attached, or create them from a session that holds a passable GitHub connector grant.
-- Confirmed by the 2026-08-13 dry runs: each Routine's stored `allowed_tools` list contains no `mcp__github__*` entries, so a fired session cannot read `approval-request` issues, transcribe owner decisions, post a `daily-report`, or open an `incident` issue.
-- Resolution chosen by Max on 2026-08-13: he will attach the GitHub connector to both Routines in the claude.ai Routines UI, keeping the issue-based communication design unchanged. This is owner-side work; the director cannot pass a connector grant it does not hold.
-- Status: `UNRESOLVED — awaiting Max's UI change`. When Max confirms it, repeat both dry runs and verify a fired session can read an issue and post a comment.
+- Resolution: on 2026-08-14 Max chose to drop the dependency instead of satisfying it. Communication moved to the git-only channel — `OWNER_INBOX.md` plus committed `daily-reports/` — under `apr-comms-008`. A scheduled cycle now reaches Max with git alone, and the connector is no longer needed by any part of the protocol.
+- Status: `RESOLVED BY DESIGN` — to be confirmed live by the repeated dry runs, which must show a fired session reading `OWNER_INBOX.md` and running `scripts/genesis.py inbox` successfully.
 
 ## Operator dry run
 

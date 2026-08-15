@@ -3,7 +3,9 @@ from __future__ import annotations
 import csv
 import importlib.util
 import json
+import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -245,6 +247,70 @@ class GenesisAcceptanceTests(unittest.TestCase):
         for weight in ["35 points", "20 points", "15 points", "10 points", "5 points"]:
             self.assertIn(weight, evaluator)
         self.assertIn("fully loaded sensitivity", evaluator)
+
+    def init_repo_with_inbox(self, decisions: str, author: tuple[str, str]) -> None:
+        """Create a git repo in the fixture and commit a Decisions section as `author`."""
+        inbox = self.root / "OWNER_INBOX.md"
+        inbox.write_text(
+            "# Owner Inbox\n\n## Requests\n\nnone\n\n## Decisions\n\n"
+            + decisions
+            + "\n\n## Notes\n\nnone\n",
+            encoding="utf-8",
+        )
+        name, email = author
+        env = {
+            "GIT_AUTHOR_NAME": name,
+            "GIT_AUTHOR_EMAIL": email,
+            "GIT_COMMITTER_NAME": name,
+            "GIT_COMMITTER_EMAIL": email,
+            "GIT_CONFIG_GLOBAL": "/dev/null",
+            "GIT_CONFIG_SYSTEM": "/dev/null",
+            "HOME": str(self.root),
+            "PATH": os.environ.get("PATH", ""),
+        }
+        for command in (
+            ["git", "init", "-q", "-b", "main"],
+            ["git", "add", "OWNER_INBOX.md"],
+            ["git", "commit", "-q", "-m", "inbox"],
+        ):
+            subprocess.run(command, cwd=self.root, env=env, check=True, capture_output=True)
+
+    def test_inbox_accepts_a_decision_authored_by_the_owner(self) -> None:
+        self.init_repo_with_inbox(
+            "- apr-1: APPROVED — with a condition", ("Max", "mhowe.gis@gmail.com")
+        )
+        report = genesis.read_inbox()
+        self.assertEqual(report["rejected"], [])
+        self.assertEqual(len(report["verified_decisions"]), 1)
+        entry = report["verified_decisions"][0]
+        self.assertEqual(entry["approval_id"], "apr-1")
+        self.assertEqual(entry["decision"], "APPROVED")
+        self.assertEqual(entry["conditions"], "with a condition")
+        self.assertEqual([e["approval_id"] for e in report["untranscribed"]], ["apr-1"])
+
+    def test_inbox_rejects_a_decision_authored_by_the_director(self) -> None:
+        self.init_repo_with_inbox("- apr-1: APPROVED", ("Claude", "noreply@anthropic.com"))
+        report = genesis.read_inbox()
+        self.assertEqual(report["verified_decisions"], [])
+        self.assertEqual(len(report["rejected"]), 1)
+        self.assertIn("authored by the director", report["rejected"][0]["reason"])
+
+    def test_inbox_rejects_a_decision_authored_by_a_third_party(self) -> None:
+        self.init_repo_with_inbox("- apr-1: APPROVED", ("Somebody", "stranger@example.com"))
+        report = genesis.read_inbox()
+        self.assertEqual(report["verified_decisions"], [])
+        self.assertIn("recorded owner identity", report["rejected"][0]["reason"])
+
+    def test_inbox_last_decision_wins_for_the_same_approval(self) -> None:
+        self.init_repo_with_inbox(
+            "- apr-1: APPROVED\n- apr-1: DENIED — changed my mind",
+            ("Max", "mhowe.gis@gmail.com"),
+        )
+        report = genesis.read_inbox()
+        self.assertEqual(len(report["verified_decisions"]), 1)
+        self.assertEqual(report["verified_decisions"][0]["decision"], "DENIED")
+        self.assertEqual(len(report["superseded"]), 1)
+        self.assertEqual(report["superseded"][0]["decision"], "APPROVED")
 
     def test_frozen_model_config_is_enforced(self) -> None:
         settings_path = self.root / ".claude" / "settings.json"

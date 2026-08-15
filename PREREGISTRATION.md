@@ -151,7 +151,7 @@ Changed:
 2. Model: `gpt-5.6-sol`, reasoning `high`, service tier `default` → `claude-fable-5`, effort `high`.
 3. Agent condition: "multi-agent tools disabled" → one director per cycle; ephemeral read-only research subagents permitted; records and external writes remain exclusive to the director.
 4. Scheduling: one Codex app heartbeat automation → two cloud Routines at the same two daily windows in the same timezone.
-5. Communication: approvals and reports move to the auditable GitHub issue channels defined in `CLOUD_ENVIRONMENT.md`; the transcription rule is unchanged.
+5. Communication: approvals and reports move to the auditable channel defined in `CLOUD_ENVIRONMENT.md`; the transcription rule is unchanged. (Amended 2026-08-14, still pre-activation: that channel is now git-only — `OWNER_INBOX.md` and committed `daily-reports/` — after the dry runs proved scheduled sessions cannot reach GitHub Issues. Recorded as `decision-0008`.)
 6. Configuration enforcement: `.codex/config.toml` → `.claude/settings.json`, with the validator updated accordingly.
 
 Unchanged: the research question's substance (one consistently configured agent), starting treasury, all financial and accounting rules, qualifying-revenue gates, acquisition-source exclusions, the pass condition, all secondary outcomes and classifications, human-role limits and the 30-minute cap, publicity separation, build and spending gates, stopping rules, the analysis plan, and the frozen evaluator and its weights.
