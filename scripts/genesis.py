@@ -14,6 +14,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import uuid
 from dataclasses import dataclass
@@ -36,6 +37,14 @@ ALLOWED_SOURCES = {
 NONQUALIFYING_SOURCES = {"max_existing_network", "friend_or_family", "test"}
 NONQUALIFYING_COUNTERPARTIES = {"owner", "friend", "family", "test", "donor"}
 TRUE_VALUES = {"true", "1", "yes"}
+# Identities are stored as SHA-256 of the lowercased git author email so that no
+# personal address is written into this public repository.
+OWNER_EMAIL_SHA256 = "3c354c7d41af8713dd0c199fd1513657139b2c77f42ec293b261b537168e253d"
+DIRECTOR_EMAIL_SHA256 = "cd29c5ac348a026a3ec5286890908fffb5bf6ab77f20672171be323a70c95026"
+DECISION_LINE = re.compile(
+    r"^-\s*(?P<approval_id>[A-Za-z0-9][A-Za-z0-9._-]*)\s*:\s*(?P<decision>APPROVED|DENIED)\b"
+    r"(?P<remainder>.*)$"
+)
 SECRET_PATTERNS = {
     "API secret key": re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"),
     "GitHub token": re.compile(r"\bghp_[A-Za-z0-9]{36}\b|\bgithub_pat_[A-Za-z0-9_]{22,}\b"),
@@ -495,6 +504,7 @@ def validate_workspace() -> ValidationResult:
         "CLAUDE.md",
         "AGENTS.md",
         "CLOUD_ENVIRONMENT.md",
+        "OWNER_INBOX.md",
         ".claude/settings.json",
         "TOOL_MANIFEST.md",
         "STATE.json",
@@ -842,6 +852,131 @@ def complete_action(action_id: str, run_id: str, result: str) -> None:
     )
 
 
+def email_digest(email: str) -> str:
+    return hashlib.sha256(email.strip().lower().encode("utf-8")).hexdigest()
+
+
+def inbox_section(text: str, heading: str) -> list[tuple[int, str]]:
+    """Return (1-based line number, line) pairs inside one '## heading' section."""
+    lines = text.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if line.strip().lower() == f"## {heading}".lower():
+            start = index + 1
+            break
+    if start is None:
+        raise GenesisError(f"OWNER_INBOX.md is missing the '## {heading}' section")
+    collected: list[tuple[int, str]] = []
+    for index in range(start, len(lines)):
+        if lines[index].startswith("## "):
+            break
+        collected.append((index + 1, lines[index]))
+    return collected
+
+
+def blame_line(path: Path, line_number: int) -> dict[str, str]:
+    try:
+        raw = subprocess.run(
+            ["git", "blame", "-L", f"{line_number},{line_number}", "--porcelain", "--", path.name],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError) as exc:
+        raise GenesisError(f"Cannot blame {path.name}:{line_number}: {exc}") from exc
+    info = {"commit": raw.split("\n", 1)[0].split(" ", 1)[0] if raw else ""}
+    for entry in raw.splitlines():
+        if entry.startswith("author-mail "):
+            info["author_mail"] = entry[len("author-mail ") :].strip().strip("<>")
+        elif entry.startswith("author "):
+            info["author"] = entry[len("author ") :].strip()
+        elif entry.startswith("summary "):
+            info["summary"] = entry[len("summary ") :].strip()
+    if info.get("commit", "").strip("0") == "":
+        info["uncommitted"] = "true"
+    return info
+
+
+def commit_signature(commit: str) -> str:
+    if not commit or commit.strip("0") == "":
+        return "uncommitted"
+    try:
+        return (
+            subprocess.run(
+                ["git", "log", "-1", "--format=%G?", commit],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            or "unknown"
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "unknown"
+
+
+def read_inbox() -> dict[str, Any]:
+    """Verify owner decisions in OWNER_INBOX.md by git authorship.
+
+    The last accepted line for an approval_id wins, so Max may revise a decision
+    before the director acts on it.
+    """
+    path = ROOT / "OWNER_INBOX.md"
+    try:
+        text = path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise GenesisError("Missing required file: OWNER_INBOX.md") from exc
+
+    accepted: dict[str, dict[str, Any]] = {}
+    rejected: list[dict[str, Any]] = []
+    superseded: list[dict[str, Any]] = []
+    for line_number, line in inbox_section(text, "Decisions"):
+        match = DECISION_LINE.match(line.strip())
+        if not match:
+            continue
+        blame = blame_line(path, line_number)
+        digest = email_digest(blame.get("author_mail", ""))
+        entry = {
+            "approval_id": match.group("approval_id"),
+            "decision": match.group("decision"),
+            "conditions": match.group("remainder").strip(" —-").strip(),
+            "line": line_number,
+            "commit": blame.get("commit", ""),
+            "author": blame.get("author", ""),
+            "signature": commit_signature(blame.get("commit", "")),
+        }
+        if blame.get("uncommitted"):
+            entry["reason"] = "decision line is not committed; commit it so authorship is recorded"
+            rejected.append(entry)
+            continue
+        if digest == DIRECTOR_EMAIL_SHA256:
+            entry["reason"] = "decision line was authored by the director, not by Max"
+            rejected.append(entry)
+            continue
+        if digest != OWNER_EMAIL_SHA256:
+            entry["reason"] = "decision line was not authored by the recorded owner identity"
+            rejected.append(entry)
+            continue
+        if entry["approval_id"] in accepted:
+            superseded.append(accepted[entry["approval_id"]])
+        accepted[entry["approval_id"]] = entry
+
+    transcribed = {
+        row.get("approval_id", "")
+        for row in read_csv(ROOT / "approvals.csv")
+        if row.get("approval_id")
+    }
+    return {
+        "verified_decisions": list(accepted.values()),
+        "untranscribed": [
+            entry for entry in accepted.values() if entry["approval_id"] not in transcribed
+        ],
+        "superseded": superseded,
+        "rejected": rejected,
+    }
+
+
 def generate_dashboard(result: ValidationResult | None = None) -> Path:
     result = result or validate_workspace()
     if not result.ok:
@@ -995,6 +1130,9 @@ def build_parser() -> argparse.ArgumentParser:
     complete.add_argument("--run-id", required=True)
     complete.add_argument("--result", required=True)
 
+    commands.add_parser(
+        "inbox", help="Verify owner decisions in OWNER_INBOX.md by git authorship"
+    )
     commands.add_parser("dashboard", help="Generate redacted public dashboard data")
     commands.add_parser("snapshot", help="Create an auditable private snapshot")
     return parser
@@ -1045,6 +1183,10 @@ def main(argv: list[str] | None = None) -> int:
             complete_action(args.action_id, args.run_id, args.result)
             print("action completed")
             return 0
+        if args.command == "inbox":
+            report = read_inbox()
+            print(json.dumps(report, indent=2))
+            return 1 if report["rejected"] else 0
         if args.command == "dashboard":
             print(generate_dashboard())
             return 0
