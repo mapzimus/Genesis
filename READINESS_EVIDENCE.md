@@ -60,18 +60,38 @@ Neither Routine stores MCP connectors, so a fired session starts without GitHub 
 - Resolution: on 2026-08-14 Max chose to drop the dependency instead of satisfying it. Communication moved to the git-only channel — `OWNER_INBOX.md` plus committed `daily-reports/` — under `apr-comms-008`. A scheduled cycle now reaches Max with git alone, and the connector is no longer needed by any part of the protocol.
 - Status: `RESOLVED BY DESIGN` — to be confirmed live by the repeated dry runs, which must show a fired session reading `OWNER_INBOX.md` and running `scripts/genesis.py inbox` successfully.
 
-## Operator dry run
+## Operator dry run — ACCEPTED (2026-08-15 repeat)
 
-- Session ID: `cse_01FSHBBcRHXm4cSB9NgEkohz` (Routine `trig_01VqPMDoHhkXgokqw8mLspdb`)
+- Session ID: `cse_017CjVnpN9RpXg4ZRABBojsL` (Routine `trig_01VqPMDoHhkXgokqw8mLspdb`), against `main` at `10395c2`
+- Timestamp: `2026-08-15T01:24:21Z`, reached idle at `01:26:58Z`
+- Model served: `claude-fable-5`, matching the preregistered fixed condition
+- Readiness branch correctly blocked market research: yes — no research, outreach, spending, or external action
+- Lock behavior: correct — `run-9459d338` remained active and owned throughout
+- Repository changes: none — `main` unchanged at `10395c2` under continuous watch for 193 s, no new branches, director tree clean
+- Result: **accepted.** Full record in `daily-reports/2026-08-15-dry-runs-repeat.md`
+
+### Superseded first attempt
+
+- Session ID: `cse_01FSHBBcRHXm4cSB9NgEkohz` (same Routine)
 - Timestamp: `2026-08-13T17:03:22Z`, reached idle at `17:05:26Z`
 - Readiness branch correctly blocked market research: yes — no research, outreach, spending, or external action resulted
 - Lock acquisition/overlap/release behavior: correct — the director's lock `run-cd06ee35` remained active and owned throughout; the fired session never acquired, stole, or released it, because `start_cycle` evaluates the readiness gate before `acquire_lock`
 - Repository changes: none — `main` stayed at `8b8e61a` under continuous watch for 152 s, no new branches, director working tree untouched
 - Result: **not accepted.** Safe behavior, but the session ran on `claude-sonnet-5` and without GitHub issue tools. See `daily-reports/2026-08-13-dry-runs.md`. Must be repeated after the Routines are corrected.
 
-## Close dry run
+## Close dry run — ACCEPTED (2026-08-15 repeat)
 
-- Session ID: `cse_013D2hLVpBGNUaERhkcRXCwx` (Routine `trig_01BPPQKGmnTp7myYnicRDVap`)
+- Session ID: `cse_01UPKPH3zB6P8CHNUGEJUtu4` (Routine `trig_01BPPQKGmnTp7myYnicRDVap`), against `main` at `10395c2`
+- Timestamp: `2026-08-15T01:28:09Z`, reached idle at `01:30:33Z`
+- Model served: `claude-fable-5`
+- No outreach or spending initiated: confirmed
+- Reconciliation/dashboard/snapshot behavior: not exercised, because the readiness gate correctly blocked the cycle first; to be re-verified after activation
+- Repository changes: none — `main` unchanged at `10395c2` under continuous watch for 257 s, no new branches, director tree clean
+- Result: **accepted.** Full record in `daily-reports/2026-08-15-dry-runs-repeat.md`
+
+### Superseded first attempt
+
+- Session ID: `cse_013D2hLVpBGNUaERhkcRXCwx` (same Routine)
 - Timestamp: `2026-08-13T17:06:37Z`, reached idle at `17:10:36Z`
 - No outreach or spending initiated: confirmed — none
 - Reconciliation/dashboard/snapshot behavior: not exercised, because the readiness gate correctly blocked the cycle before reconciliation; this must be re-verified after activation prerequisites are met

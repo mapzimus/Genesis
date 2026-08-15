@@ -1,10 +1,10 @@
 {
-  "status": "active",
+  "status": "idle",
   "run_id": "run-9459d338-798a-4b52-82cf-1244f388cd95",
   "task_type": "manual",
   "started_at": "2026-08-15T01:23:58+00:00",
   "expected_max_minutes": 120,
-  "last_heartbeat": "2026-08-15T01:23:58+00:00",
-  "released_at": null,
-  "release_reason": null
+  "last_heartbeat": "2026-08-15T01:34:12+00:00",
+  "released_at": "2026-08-15T01:34:12+00:00",
+  "release_reason": "Repeat dry runs accepted; schedule flags set"
 }
